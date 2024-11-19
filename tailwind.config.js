@@ -2,9 +2,6 @@
 module.exports = {
   content: [
     './main/templates/Main/**/*.html',
-    './main/templates/**/*.html',  // Make sure to add the paths to your templates here
-    './main/static/js/**/*.js',
-    './Zapcommerce/**/*.py',
   ],
   theme: {
     extend: {
