@@ -1,0 +1,494 @@
+{% extends 'main/parts/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="md:w-full md:flex md:justify-center">
+        <div class="relative bg-slate-900 overflow-hidden shadow-sm mt-1 max-w-full w-full md:w-2/3">
+        
+        <div id="carousel" class="flex transition-transform duration-300 ease-in-out h-full">
+        
+            <div class="container max-w-full w-full flex-shrink-0 relative">
+                <img src="{% static 'image/sales poster.jpg' %}" class="object-cover" alt="">
+            </div>
+
+            <div class="container max-w-full w-full flex-shrink-0">
+                <img src="{% static 'image/poster1.png' %}" class="object-cover" alt="">
+            </div>
+        </div>
+
+        <button id="prevBtn" class="absolute left-4 top-1/2 transform shadow-md -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        <button id="nextBtn" class="absolute right-4 top-1/2 transform shadow-md -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+        </div>
+  </div>
+
+    <!--Categories-->
+    <div class="container mx-auto px-4 py-8 hidden md:block mt-2">
+        <div class="flex justify-center space-x-10">
+            <a href="/products/dress" class="flex flex-col items-center group">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-200 transition-colors duration-300">
+                    <img src="{% static 'image/categories/dressbg.png' %}" alt="" class="w-12 h-12">
+                </div>
+                <span class="text-sm text-gray-700 group-hover:text-gray-900">Dresses</span>
+            </a>
+            <a href="/products/tops" class="flex flex-col items-center group">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-200 transition-colors duration-300">
+                    <img src="{% static 'image/categories/movingbg.png' %}" alt="" class="w-14 h-14">
+                </div>
+                <span class="text-sm text-gray-700 group-hover:text-gray-900">Tops</span>
+            </a>
+            <a href="/products/bottoms" class="flex flex-col items-center group">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-200 transition-colors duration-300">
+                    <img src="{% static 'image/categories/brownpanthsbg.png' %}" alt="" class="w-14 h-14">
+                </div>
+                <span class="text-sm text-gray-700 group-hover:text-gray-900">Bottoms</span>
+            </a>
+            <a href="/products/shoes" class="flex flex-col items-center group">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-200 transition-colors duration-300">
+                    <img src="{% static 'image/categories/airmaxbg.png' %}" alt="" class="w-14 h-14">
+                </div>
+                <span class="text-sm text-gray-700 group-hover:text-gray-900">Shoes</span>
+            </a>
+            <a href="/products/watch" class="flex flex-col items-center group">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-gray-200 transition-colors duration-300">
+                    <img src="{% static 'image/categories/watchbg.png' %}" alt="" class="w-12 h-12">
+                </div>
+                <span class="text-sm text-gray-700 group-hover:text-gray-900">Watch</span>
+            </a>
+        </div>
+    </div>
+
+
+
+    <!--New Product-->
+    <div class="mt-10 container max-w-full mb-5">
+        <div class="w-full flex">
+            <h1 class="font-lato font-bold ml-3 flex-1 mt-2 md:hidden">New Products</h1>
+            
+            <div class="block md:hidden">
+                <button id="prevBtn1" class=" shadow-md text-sm bg-white bg-opacity-50 mr-2 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+
+                <button id="nextBtn1" class=" shadow-md bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none mr-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!--Mobile View Products-->
+        <div class="w-full flex md:hidden overflow-hidden">
+
+            <div id="carousel1" class="transition-transform duration-300 ease-in-out w-full flex h-full">
+                <div class="grid grid-cols-2 gap-x-2 mt-2 px-2 container max-w-full w-full flex-shrink-0 relative">
+                    {% for product in mnew_released %}
+                        {% if forloop.counter < 3 %}
+                            <!-- Product Card 1 -->
+                            <a href="view/{{ product.product_id }}/">
+                                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                    <div class="relative pt-[100%]">
+                                        <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                        {% if product.product_discount > 0 %}
+                                            <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                                {{product.product_discount}}% OFF
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="p-4 flex-grow flex flex-col justify-between">
+                                        <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                            <div class="text-sm text-red-500 line-through">$99.99</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="grid grid-cols-2 gap-x-2 mt-2 px-2 container max-w-full w-full flex-shrink-0 relative">
+                    {% for product in mnew_released %}
+                        {% if forloop.counter > 2 and  forloop.counter < 5%}
+                            <!-- Product Card 1 -->
+                            <a href="view/{{ product.product_id }}/">
+                                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                    <div class="relative pt-[100%]">
+                                        <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                        {% if product.product_discount > 0 %}
+                                            <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                                {{product.product_discount}}% OFF
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="p-4 flex-grow flex flex-col justify-between">
+                                        <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                            <div class="text-sm text-red-500 line-through">$99.99</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="grid grid-cols-2 gap-x-2 mt-2 px-2 container max-w-full w-full flex-shrink-0 relative">
+                    {% for product in mnew_released %}
+                        {% if forloop.counter > 2 and  forloop.counter > 4%}
+                            <!-- Product Card 1 -->
+                            <a href="view/{{ product.product_id }}/">
+                                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                    <div class="relative pt-[100%]">
+                                        <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                        {% if product.product_discount > 0 %}
+                                            <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                                {{product.product_discount}}% OFF
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="p-4 flex-grow flex flex-col justify-between">
+                                        <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                            <div class="text-sm text-red-500 line-through">$99.99</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <!--Desktop View Products-->
+        <div class="  md:px-0 hidden md:flex md:justify-center container max-w-full w-full">
+            <div class="container md:w-2/3">
+                <div class="flex justify-between items-center md:justify-normal mb-4 md:w-full relative">
+                    <h1 class="font-lato font-bold text-xl md:flex-1">New Products</h1>
+                    <a href="/products/new-release" class="font-lato font-semibold text-sm md:text-md md:text-end md:text-md">Show more</a>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 font-lato">
+                    {% for product in dnew_released %}
+                        <!-- Product Card 1 -->
+                         <a href="view/{{ product.product_id }}/">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                            <div class="relative pt-[100%]">
+                                <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                {% if product.product_discount > 0 %}
+                                    <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                        {{product.product_discount}}% OFF
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="p-4 flex-grow flex flex-col justify-between">
+                                <h2 class="text-md font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                <div class="flex justify-between items-center">
+                                    <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                    <div class="text-sm text-red-500 line-through">$99.99</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                
+            </div>
+        </div>
+
+
+        <!--Show more link-->
+        <div class="w-full mt-3 text-center font-lato font-semibold md:text-lg md:mt-4 md:hidden">
+            <a href="/products/new-release" class="text-sm rounded-full px-9 mt-4" >Show more</a>
+        </div>
+    </div>
+
+
+    <!--New Product Poster-->
+    <div class="container max-w-full md:mt-14 justify-center hidden md:flex">
+        <a href="#" class="w-2/3 relative">
+            <img src="{% static 'image/poster.jpg' %}" class="object-cover" alt="">
+        </a>
+    </div>
+
+
+    <!--Sales Products-->
+    <div class=" md:mt-10 container max-w-full mb-5">
+        <div class="w-full flex">
+            <h1 class="font-lato font-bold ml-3 mt-2 flex-1 md:hidden">Hot Deals</h1>
+            
+            <div class="block md:hidden">
+                <button id="prevBtn2" class=" shadow-md bg-white bg-opacity-50 mr-2 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+
+                <button id="nextBtn2" class=" shadow-md bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none mr-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!--Mobile View Products-->
+        <div class="w-full flex justify-center md:justify-normal md:hidden overflow-hidden">
+
+            <div id="carousel2" class="flex transition-transform duration-300 ease-in-out h-full">
+            
+                <div id="carousel1" class="transition-transform duration-300 ease-in-out flex  h-full">
+                    <div class="grid grid-cols-2 gap-x-2 mt-2 px-2 w-full flex-shrink-0">
+    
+                        {% for product in mhot_deals %}
+                            {% if forloop.counter < 3 %}
+                                <!-- Product Card 1 -->
+                                <a href="view/{{ product.product_id }}/">
+                                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                        <div class="relative pt-[100%]">
+                                            <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                            {% if product.product_discount > 0 %}
+                                                <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                                    {{product.product_discount}}% OFF
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="p-4 flex-grow flex flex-col justify-between">
+                                            <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                                <div class="text-sm text-red-500 line-through">$99.99</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-2 mt-2 px-2 w-full flex-shrink-0">
+    
+                        {% for product in mhot_deals %}
+                            {% if forloop.counter > 2 and forloop.counter < 5%}
+                                <!-- Product Card 1 -->
+                                <a href="view/{{ product.product_id }}/">
+                                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                        <div class="relative pt-[100%]">
+                                            <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                            {% if product.product_discount > 0 %}
+                                                <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                                    {{product.product_discount}}% OFF
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="p-4 flex-grow flex flex-col justify-between">
+                                            <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                                <div class="text-sm text-red-500 line-through">$99.99</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-2 mt-2 px-2 w-full flex-shrink-0">
+    
+                        {% for product in mhot_deals %}
+                            {% if forloop.counter > 4 %}
+                                <!-- Product Card 1 -->
+                                <a href="view/{{ product.product_id }}/">
+                                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                        <div class="relative pt-[100%]">
+                                            <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                            {% if product.product_discount > 0 %}
+                                                <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                                    {{product.product_discount}}% OFF
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="p-4 flex-grow flex flex-col justify-between">
+                                            <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                                <div class="text-sm text-red-500 line-through">$99.99</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+                
+    
+            </div>
+        </div>
+
+        <!--Desktop View Products-->
+        <div class=" md:px-0 hidden md:flex md:justify-center container max-w-full w-full ">
+            <div class="container md:w-2/3  rounded-lg relative">
+                <div class="flex justify-between items-center md:justify-normal mb-4 md:w-full font-lato rounded-t-xl ">
+                    <div class="flex md:flex-1 space-x-2">
+                        <h1 class="font-lato font-bold text-xl mr-1">Hot Deals</h1>
+                        <div class="flex flex-col">
+                            <div id="days" class="bg-slate-900 text-white rounded-md space-x-1 w-8 h-8 sm:w-8sm:h-8 lex flex items-center justify-center text-lg sm:text-sm">00</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div id="hours" class="bg-slate-900 text-white rounded-md w-8 h-8 sm:w-8 sm:h-8  flex items-center justify-center text-lg sm:text-sm">00</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div id="minutes" class="bg-slate-900 text-white rounded-md w-8 h-8 sm:w-8 sm:h-8  flex items-center justify-center text-lg sm:text-sm">00</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div id="seconds" class="bg-slate-900 text-white rounded-md w-8 h-8 sm:w-8 sm:h-8  flex items-center justify-center text-lg sm:text-sm">00</div>
+                        </div>
+                    </div>
+                    <a href="/products/deals" class="font-lato font-semibold text-sm md:text-md md:text-end md:text-md">Show more</a>
+                </div>
+
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 font-lato">
+                    {% for product in dhot_deals %}
+                        <!-- Product Card 1 -->
+                        <a href="view/{{ product.product_id }}/">
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                <div class="relative pt-[100%]">
+                                    <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                    {% if product.product_discount > 0 %}
+                                        <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                            {{product.product_discount}}% OFF
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col justify-between">
+                                    <h2 class="text-md font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                        <div class="text-sm text-red-500 line-through">$99.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <!--Show more link-->
+        <!--Show more link-->
+        <div class="w-full text-center font-lato font-semibold md:text-lg md:mt-4 md:hidden">
+            <a href="/products/deals" class="text-sm rounded-full px-9 mt-4" >Show more</a>
+        </div>
+    </div>
+
+
+
+    <!--All Products-->
+
+    <div class="container max-w-full mt-4 md:mt-16">
+        <h1 class="font-lato font-bold ml-3 mb-2 md:hidden">For you</h1>
+        
+        <div id="for-you-products" class="grid grid-cols-2 gap-x-2 gap-y-2 mt-2 px-2 w-full flex-shrink-0 md:hidden">
+    
+            {% for product in mall_product %}
+                    <!-- Product Card 1 -->
+                    <a href="view/{{ product.product_id }}/">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                            <div class="relative pt-[100%]">
+                                <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                {% if product.product_discount > 0 %}
+                                    <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                        {{product.product_discount}}% OFF
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="p-4 flex-grow flex flex-col justify-between">
+                                <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                <div class="flex justify-between items-center">
+                                    <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                    <div class="text-sm text-red-500 line-through">$99.99</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+            {% endfor %}
+        </div>
+
+
+        <!--Desktop View Products-->
+        <div class=" md:px-0 hidden md:flex md:justify-center container max-w-full w-full">
+            <div id="all-products-container" class="container md:w-2/3">
+                <div class="flex justify-between items-center md:justify-normal mb-4 md:w-full relative">
+                    <h1 class="font-lato font-bold text-xl md:flex-1">For You</h1>
+                    
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 grid-rows-2 font-lato">
+                    {% for product in dall_product %}
+                            <!-- Product Card 1 -->
+                        <a href="/view/{{ product.product_id }}">
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                <div class="relative pt-[100%]">
+                                    <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                    {% if product.product_discount > 0 %}
+                                        <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                            {{product.product_discount}}% OFF
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col justify-between">
+                                    <h2 class="text-md font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                        <div class="text-sm text-red-500 line-through">$99.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!--Show more link-->
+        <div class="w-full mt-3 text-center flex justify-center font-lato font-semibold md:text-md md:mt-4">
+            <button id="show-products" onclick="show_more(this)" class="hidden md:block" >Show more</button>
+            <button id="mobile-show-products" onclick="show_more(this, 'mobile')" class="md:hidden block" >Show more</button>
+            <div id="loading_" class="animate-spin rounded-full mt-6 h-14 w-14 border-t-2 border-b-2 border-black relative hidden">
+                <i class="fas fa-shopping-cart text-3xl text-black absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'js/store.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'main/parts/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!--hero section-->
+    <div class="container mx-auto px-4 lg:px-0">
+        <div class="flex flex-col lg:flex-row justify-center">
+            <!--Sidebar-->
+            <div class="w-full lg:w-1/4 xl:w-1/5 mb-4 lg:mb-0 hidden lg:block">
+                <aside class="bg-white shadow-lg overflow-y-auto rounded-lg sticky top-4">
+                    <nav class="p-4">
+                        <h2 class="text-lg font-semibold mb-4">Categories</h2>
+                        <ul class="space-y-4">
+                            <li>
+                                <h3 class="text-md font-medium mb-2">Clothing</h3>
+                                <ul class="ml-4 space-y-1">
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Men's</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Women's</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Kids</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h3 class="text-md font-medium mb-2">Electronics</h3>
+                                <ul class="ml-4 space-y-1">
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Smartphones</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Laptops</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Accessories</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h3 class="text-md font-medium mb-2">Home & Living</h3>
+                                <ul class="ml-4 space-y-1">
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Furniture</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Decor</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Kitchen</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h3 class="text-md font-medium mb-2">Books</h3>
+                                <ul class="ml-4 space-y-1">
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Fiction</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Non-fiction</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Educational</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h3 class="text-md font-medium mb-2">Sports & Outdoors</h3>
+                                <ul class="ml-4 space-y-1">
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Equipment</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Clothing</a></li>
+                                    <li><a href="#" class="text-sm hover:text-blue-600">Footwear</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+            </div>
+
+            <div class="w-full lg:w-2/3 lg:pl-4">
+                <!--Banners-->
+                <div class="w-full mb-4 hidden md:block">
+                    <div class="relative overflow-hidden shadow-sm rounded-md">
+                        <div id="carousel" class="flex transition-transform duration-300 ease-in-out">
+                            <div class="w-full flex-shrink-0">
+                                <img src="{% static 'image/sales poster.jpg' %}" class="w-full h-auto object-cover rounded-md" alt="Sales Poster">
+                            </div>
+                            <div class="w-full flex-shrink-0">
+                                <img src="{% static 'image/poster1.png' %}" class="w-full h-auto object-cover rounded-md" alt="Poster 1">
+                            </div>
+                        </div>
+                        <button id="prevBtn" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button id="nextBtn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!--Products-->
+                <div class="mb-4 md:mt-0 mt-5">
+                    <div class="flex">
+                        <div class="flex items-center gap-2 mb-4 flex-1">
+                            <label for="sorting" class="text-gray-600 text-sm font-bold">Sort By:</label>
+                            <select id="sorting" class="border border-gray-200 rounded px-3 py-1.5 text-sm bg-white text-gray-600 pr-8 focus:outline-none focus:border-gray-300">
+                                <option value="default">Default sorting</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                            </select>
+                        </div>
+
+                        {% if result != '' %}
+                            <h1 class="font-lato mr-4 mt-2 hidden md:block">Result: <span class="font-bold">{{result}}</span></h1>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                        {% for product in products %}
+                            <a href="/view/{{ product.product_id }}" class="block">
+                                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                    <div class="relative pt-[100%]">
+                                        <img src="{{product.product_image.url}}" alt="{{ product.product_name }}" class="absolute top-0 left-0 w-full h-full object-cover">
+                                        {% if product.product_discount > 0 %}
+                                            <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                                {{product.product_discount}}% OFF
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="p-4 flex-grow flex flex-col justify-between">
+                                        <h2 class="text-sm sm:text-md font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                            <div class="text-xs sm:text-sm text-red-500 line-through">$99.99</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="w-full flex justify-center mt-4">
+                    <!--Pagination-->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

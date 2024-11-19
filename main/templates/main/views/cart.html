@@ -1,0 +1,139 @@
+{% extends 'main/parts/base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1 class="text-center font-play-fair font-bold text-xl md:text-3xl md:mt-6 mt-4">SHOPPING CART</h1>
+    <div class="flex justify-center ">
+        <div class="md:w-2/3 md:mt-7 mt-5 w-full">
+
+            <div class="w-full md:px-5 border py-2 hidden md:block rounded-t-xl bg-white border-b-0">
+                <!--product Card-->
+                <div class="flex text-gray-400 ">
+                    <div class="md:grid hidden grid-cols-[1.5fr_1fr_1fr_1fr_1fr] w-full font-bold">
+                        <div class="h-full flex">
+    
+                        </div>
+
+                        <div class="h-full flex flex-col font-lato font-bold">
+                            <h1 class="font-lato text-md mt-1.5 text-center text-gray-400">Price</h1>
+                        </div>
+
+                        <div class="h-full flex flex-col font-lato font-bold">
+                            <div class="flex justify-center">
+                                <h1 class="font-lato text-md mt-1.5 text-center">Quantity</h1>
+                            </div>
+                        </div>
+
+                        <div class="h-full flex flex-col font-lato  font-bold">
+                            <h1 class=" text-md mt-1.5 text-center">Total</h1>
+                        </div>
+
+                        <div class="h-full flex flex-col font-lato font-bold">
+                            <div class="flex justify-center">
+                                <h1 class="font-lato text-md mt-1.5 text-center">Action</h1>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+
+            <div class="w-full border md:px-4 px-0 py-2 h-[35rem] max-h-[35rem] md:border-t-gray-300 overflow-y-auto bg-white pt-0 rounded-xl rounded-t-none shadow-md">
+                {% if not cart_products %}
+                    <div class="flex flex-col h-full justify-center">
+                        <h1 class="font-lato text-2xl font-bold text-gray-400 text-center">No Product</h1>
+                {% else %}
+                    <div class="flex flex-col h-full">
+                {% endif %}
+
+                    {% for product in cart_products %}
+                        <!--product Card-->
+                        <div class="w-full" id="{{product.cart_id}}">
+                            <div class="md:grid md:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] md:px-0 px-3 w-full mt-4">
+                                <div class="h-full flex">
+
+                                    <a href="/view/{{product.cart_product.product_id}}"><img src="{{ product.cart_product.product_image.url }}" class="md:w-24 w-24 h-24 border rounded-md" alt=""></a>
+
+                                    <div class="h-full flex flex-col ml-2 md:mt-2 font-lato md:mr-8">
+                                        <a href="/view/{{product.cart_product.product_id}}" class="font-bold text-md line-clamp-2">{{ product.cart_product.product_name }}</a>
+                                        <h1 class="text-sm mt-1">Size: {{ product.cart_product_size }}</h1>
+                                        <h1 class="text-sm mt-1 md:hidden">Price: ₱{{ product.product_price }}</h1>
+                                    </div>
+                                </div>
+
+
+                                
+                                <div class="h-full md:flex flex-col justify-center font-lato hidden ">
+                                    <div class="flex justify-center">
+                                        <h1 class="mt-1.5">₱</h1><h1 class="font-lato  mt-1.5 " id="price-{{ forloop.counter }}">{{product.product_price}}</h1>
+                                    </div>
+                                </div>
+
+                                <div class="h-full md:flex flex-col justify-center font-lato hidden">
+                                    <div class="flex mt-1 justify-center">
+                                        <input onblur="update_quantity(this)" id="{{forloop.counter}}" cart_id="{{product.cart_id}}" type="number" class="w-24 h-8 pl-1 rounded-md text-md border py-2" value="{{ product.cart_product_total_qt }}">
+                                    </div>
+                                </div>
+
+                                <div class="h-full md:flex flex-col justify-center font-lato mt-4 md:mt-0">
+                                    <div class="flex md:justify-center justify-end">
+                                        <h1 onclick="show_dialog(this)" cart_id="{{product.cart_id}}" class="text-md flex-1 mt-1 text-red-400 hover:cursor-pointer md:hidden"><i class="fas fa-trash text-md" style="color: red; cursor: pointer;"></i></h1>
+
+                                        <div class=" flex md:justify-center">
+                                            <input onblur="update_quantity(this)" id="{{forloop.counter}}" cart_id="{{product.cart_id}}" type="number" class="w-24 h-8 pl-1  md:mr-0 mr-2 rounded-md text-md border py-2 md:hidden" value="{{ product.cart_product_total_qt }}">
+                                            <h1 class="mt-1.5">₱</h1><h1 class=" text-md mt-1.5 text-center total-price" id="total-price-{{ forloop.counter }}">{{ product.cart_product_total_price }} </h1>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="h-full md:flex flex-col justify-center font-lato hidden">
+                                    <div class="w-full flex justify-center">
+                                        <h1 onclick="show_dialog(this)" cart_id="{{product.cart_id}}" class="text-md mt-1.5 text-red-400 hover:cursor-pointer"><span><i class="fas fa-trash text-2xl" style="color: rgb(248, 85, 85); cursor: pointer;"></i></span></h1>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <hr class="mt-4">
+                        </div>
+
+                    {% endfor %}
+
+                    
+                </div>
+            </div>
+
+
+            <!--Total Price-->
+            <div class="w-full bg-white shadow-md rounded-lg mt-4 md:px-5 py-4 px-3 border">
+                <div class="w-full flex h-full font-lato font-bold">
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h1 id="display-total-price" class="md:text-lg font-lato font-bold">Total Price: {{total_price}}</h1>
+
+                    </div>
+                    <button class="text-white bg-slate-950 md:py-3 md:px-10 px-8 py-2 text-sm  md:text-lg rounded-md">Check Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        <div id="dialog-holder" class="absolute h-screen top-0 left-0 w-full hidden flex-col justify-center ">
+            <div class="w-full flex justify-center relative">
+                <div class="md:w-96 w-72 h-44 bg-white border rounded-xl shadow-2xl fixed top-80 flex flex-col  ">
+                    <h1 class="font-lato text-center font-bold text-lg px-4 mt-10">Are you sure you want to remove this product?</h1>
+                    <div class="grid grid-cols-2 mt-5 absolute bottom-0 w-full">
+                        <button onclick="close_dialog()" class="py-2 px-4 border hover:bg-gray-100">No</button>
+                        <button onclick="remove_product()" class="py-2 px-4 border border-l-0 hover:bg-gray-100" >Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block script %}
+
+        <script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

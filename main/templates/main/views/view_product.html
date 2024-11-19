@@ -1,0 +1,547 @@
+{% extends 'main/parts/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!--Product Images-->
+    <div class="flex flex-col">
+        <div class="md:flex container max-w-full justify-center">
+            <div class="container max-w-full overflow-hidden md:w-1/3 md:mr-7 md:h-full md:relative md:mt-1">
+                <div id="carousel" class="flex transition-transform duration-300 ease-in-out h-full">
+                    
+                    <div class="w-full flex flex-shrink-0 relative">
+    
+                        <div class="container w-full max-w-full md:min-w-full flex justify-center md:justify-end">
+                            <img src="{{ product.product_image.url }}" class="object-cover md:w-full md:h-[70vh] md:max-h-[70vh]" alt="">
+                        </div>
+    
+                    </div>
+                    
+                    <div class="w-full flex flex-shrink-0 relative">
+    
+                        <div class="container w-full max-w-full flex justify-center md:justify-end">
+                            <img src="{% static 'image/front.png'%}" class="object-cover md:w-full md:h-[70vh] md:max-h-[70vh]" alt="">
+                        </div>
+    
+                    </div>
+                    
+                    <div class="w-full flex flex-shrink-0 relative">
+    
+                        <div class="container w-full max-w-full flex md:min-w-full justify-center md:justify-end">
+                            <img src="{% static 'image/pov.png'%}" class="object-cover md:w-full md:h-[70vh] md:max-h-[70vh]" alt="">
+                        </div>
+    
+                    </div>
+    
+                    <div class="w-full flex flex-shrink-0 relative">
+    
+                        <div class="container w-full max-w-full  flex md:min-w-full justify-center md:justify-end">
+                            <img src="{% static 'image/back.png'%}" class="object-cover md:w-full md:h-[70vh] md:max-h-[70vh]" alt="">
+                        </div>
+                        
+                    </div>
+                </div>
+    
+                <!--Next and Prev Button-->
+                <div class="container max-w-full flex justify-center mt-3 md:absolute bottom-2">
+                    <button id="prevBtn" class=" shadow-md bg-white  mr-2 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+    
+                    <h1   class="mr-2 mt-2 font-lato text-sm"><span id="image-index">1</span> <span>/</span> <span>4</span></h1>
+    
+                    <button id="nextBtn" class=" shadow-md bg-white hover:bg-opacity-75 rounded-full p-2 focus:outline-none mr-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+    
+            <!--Product Info-->
+            <div class="container max-w-full mt-10 px-4 font-semibold flex flex-col  md:w-1/3">
+                <h1 class="font-play-fair text-2xl md:text-3xl">{{ product.product_name }}</h1>
+
+                <p class="mt-1 text-md font-bold text-text-color md:text-start md:mt-5 md:text-lg font-lato"><span class="font-normal">₱</span>{{product_discount}}
+                    <span class="text-xs ml-1 text-secondary line-through md:text-md font-lato"><span>₱{{product_price}}</span></p>
+
+                <p class="text-xs font-lato font-semibold md:text-start">Sales ends in <span>2</span> days</p>
+    
+                <!--Product Size-->
+                <div class="container max-w-full">
+                    <h1 class="text-lg font-lato font-semibold mt-3 md:mt-5">Size</h1>
+    
+                    <!--Product Size Radio-->
+                    {% if product_size %}
+                        
+                        <div class="container max-w-full flex flex-wrap font-lato">
+                            {% for size in product_size %}
+                                <label class="inline-flex items-center mr-2 mt-2">
+                                    <input type="radio" class="hidden peer" name="size" value="{{ size }}" onchange="product_size(this)">
+                                    <span class="peer-checked:bg-gray-200  border-border border w-14 md:w-16 md:text-md text-center py-2 md:py-3 text-sm hover:cursor-pointer">{{ size }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="flex">
+                    <a href="#" class="text-sm font-lato font-semibold underline mt-2">Size Guide</a>
+                    <p id="size-notif" class="font-lato text-sm text-red-400 mt-2 ml-7 hidden">Choose your size</p>
+                </div>
+                <!--Add to cart button-->
+                <div class="w-full flex justify-center mt-4 md:mt-10">
+                    {% if request.user.is_authenticated %}
+                        <button class="font-lato font-bold bg-slate-950 text-white py-2 w-72 rounded-2xl md:w-96 md:text-lg md:py-4 md:rounded-full" id="{{product.product_id}}" onclick="add_to_cart(this)">ADD TO CART</button>
+                    {% else %}
+                        <a href="{% url 'sign-in' current_location=request.path %}"><button class="font-lato font-bold bg-slate-950 text-white py-2 w-72 rounded-2xl md:w-96 md:text-lg md:py-4 md:rounded-full">ADD TO CART</button></a>
+                    {% endif %}
+                </div>
+    
+                <!--Product details-->
+                <div class="container max-w-full mt-5 md:mt-10">
+                    <h1 class="font-lato font-bold text-md md:text-lg">Product Details</h1>
+    
+                    <ul class=" font-lato text-md list-disc">
+                        <p class="">{{ product.product_details }}</p>
+                    </ul>
+    
+                    <div class="flex justify-center w-full mt-3 text-md md:mt-5">
+                        <a href="#" class="font-lato text-center text-sm font-bold">View More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <!--Review Section-->
+        <div class="container max-w-full md:flex justify-center mt-8 md:mt-10 px-4 md:px-0 font-lato ">
+            <div class="flex flex-col md:flex-row md:w-1/3">
+                
+                <div class="flex flex-col md:flex-none">
+                    <h1 class="font-lato font-bold text-md md:text-xl flex-1 md:flex-none">Reviews</h1>
+                    <div class="md:h-full md:flex md:flex-col md:justify-center">
+                        <div class="md:container md:w-full md:flex">
+                                <div class="flex mt-1">
+                                    <svg class="w-6 h-6 md:w-10 md:h-10 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <svg class="w-6 h-6 md:w-10 md:h-10 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <svg class="w-6 h-6 md:w-10 md:h-10 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <svg class="w-6 h-6 md:w-10 md:h-10 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    <svg class="w-6 h-6 md:w-10 md:h-10 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                        <p class="ml-2 text-sm md:text-lg font-medium text-gray-500 md:hidden">{{product.product_rate}} out of 5</p>
+                                    </div>
+                                </div>
+                                <p class="ml-2 text-sm md:text-lg font-medium text-gray-500 hidden md:block">{{product.product_rate}} out of 5</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class=" p-3 rounded-lg shadow-md w-full max-w-full mt-1 md:w-1/3">
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium text-gray-600 w-14">5 star</span>
+                            <div class="flex-1 h-5 mx-2 bg-gray-200 rounded">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: 70%;" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-600">70%</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium text-gray-600 w-14">4 star</span>
+                            <div class="flex-1 h-5 mx-2 bg-gray-200 rounded">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: 17%;" role="progressbar" aria-valuenow="17" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-600">17%</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium text-gray-600 w-14">3 star</span>
+                            <div class="flex-1 h-5 mx-2 bg-gray-200 rounded">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: 8%;" role="progressbar" aria-valuenow="8" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-600">8%</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium text-gray-600 w-14">2 star</span>
+                            <div class="flex-1 h-5 mx-2 bg-gray-200 rounded">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: 3%;" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-600">3%</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium text-gray-600 w-14">1 star</span>
+                            <div class="flex-1 h-5 mx-2 bg-gray-200 rounded">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: 2%;" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-600">2%</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-500">
+                        Based on 1,234 reviews
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Comment Section-->
+        <div class="md:container md:max-w-full md:w-full md:justify-center md:flex md:mt-7">
+            <div class="container max-w-full px-4 md:px-0 mt-2 flex flex-col md:flex-none md:grid md:grid-cols-3 md:grid-rows-2 md:md:w-2/3 md:gap-x-3 md:gap-y-4">
+                <!--Coment card-->
+                <a href="#" class="md:shadow-md md:bg-white rounded-xl w-full md:px-2 md:pr-4 md:pb-4">
+                    <div class="flex mt-4">
+                        <!--User Profile-->
+                        <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+    
+                        </div>
+    
+                        <!--User name-->
+                        <div class="h-10 flex flex-col justify-center">
+                            <h1 class="font-lato text-md font-bold">Justin Zapanta</h1>
+                        </div>
+                    </div>
+    
+                    <!--User comment-->
+                    <div class="pl-5 mt-2 flex flex-col  ">
+                        <p class="text-sm font-lato md:text-md line-clamp-3 ">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis nisi, numquam quis nemo delectus atque fuga at. Itaque nesciunt aut eos laboriosam magni voluptate ratione repellat exercitationem magnam, obcaecati ipsum.</p>
+    
+                        <div class="flex mt-1">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+    
+                    </div>
+                </a>
+
+                <div class="md:shadow-md md:bg-white rounded-xl w-full md:px-2 md:pr-4">
+                    <div class="flex mt-4">
+                        <!--User Profile-->
+                        <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+    
+                        </div>
+    
+                        <!--User name-->
+                        <div class="h-10 flex flex-col justify-center">
+                            <h1 class="font-lato text-md font-bold">Justin Zapanta</h1>
+                        </div>
+                    </div>
+    
+                    <!--User comment-->
+                    <div class="pl-5 mt-2 flex flex-col">
+                        <p class="text-sm font-lato md:text-md">The product is nice. Ice Cream Yummy Ice cream good</p>
+    
+                        <div class="flex mt-1">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+    
+                    </div>
+                </div>
+
+                <div class="md:shadow-md md:bg-white rounded-xl w-full md:px-2 md:pr-4">
+                    <div class="flex mt-4">
+                        <!--User Profile-->
+                        <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+    
+                        </div>
+    
+                        <!--User name-->
+                        <div class="h-10 flex flex-col justify-center">
+                            <h1 class="font-lato text-md font-bold">Justin Zapanta</h1>
+                        </div>
+                    </div>
+    
+                    <!--User comment-->
+                    <div class="pl-5 mt-2 flex flex-col">
+                        <p class="text-sm font-lato md:text-md">The product is nice. Ice Cream Yummy Ice cream good</p>
+    
+                        <div class="flex mt-1">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+    
+                    </div>
+                </div>
+    
+                <!--row 2-->
+                <div class="md:shadow-md md:bg-white rounded-xl w-full md:px-2 md:pr-4">
+                    <div class="flex mt-4">
+                        <!--User Profile-->
+                        <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+    
+                        </div>
+    
+                        <!--User name-->
+                        <div class="h-10 flex flex-col justify-center">
+                            <h1 class="font-lato text-md font-bold">Justin Zapanta</h1>
+                        </div>
+                    </div>
+    
+                    <!--User comment-->
+                    <div class="pl-5 mt-2 flex flex-col">
+                        <p class="text-sm font-lato md:text-md">The product is nice. Ice Cream Yummy Ice cream good</p>
+    
+                        <div class="flex mt-1">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+    
+                    </div>
+                </div>
+
+                <div class="md:shadow-md md:bg-white rounded-xl w-full md:px-2 md:pr-4">
+                    <div class="flex mt-4">
+                        <!--User Profile-->
+                        <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+    
+                        </div>
+    
+                        <!--User name-->
+                        <div class="h-10 flex flex-col justify-center">
+                            <h1 class="font-lato text-md font-bold">Justin Zapanta</h1>
+                        </div>
+                    </div>
+    
+                    <!--User comment-->
+                    <div class="pl-5 mt-2 flex flex-col">
+                        <p class="text-sm font-lato md:text-md">The product is nice. Ice Cream Yummy Ice cream good</p>
+    
+                        <div class="flex mt-1">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+    
+                    </div>
+                </div>
+
+                <div class="md:shadow-md md:bg-white rounded-xl w-full md:px-2 md:pr-4">
+                    <div class="flex mt-4">
+                        <!--User Profile-->
+                        <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+    
+                        </div>
+    
+                        <!--User name-->
+                        <div class="h-10 flex flex-col justify-center">
+                            <h1 class="font-lato text-md font-bold">Justin Zapanta</h1>
+                        </div>
+                    </div>
+    
+                    <!--User comment-->
+                    <div class="pl-5 mt-2 flex flex-col">
+                        <p class="text-sm font-lato md:text-md">The product is nice. Ice Cream Yummy Ice cream good</p>
+    
+                        <div class="flex mt-1">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+            <!--Comment Pagination-->
+            <div class="container max-w-full py-4 flex justify-center font-lato text-sm space-x-2 md:mt-1">
+                <button class="w-8 h-8 bg-gray-100 border rounded-md">
+                    <svg class="w-4 ml-1 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round"  stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+
+                <button class="w-8 h-8 bg-gray-100 border rounded-md">1</button>
+                <button class="w-8 h-8 bg-gray-100 border rounded-md">2</button>
+                <button class="w-8 h-8 bg-gray-100 border rounded-md">3</button>
+                <button class="w-8 h-8 bg-gray-100 border rounded-md">4</button>
+
+                <button class="w-8 h-8 bg-gray-100 border rounded-md">
+                        <svg class="w-4 ml-2 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                </button>
+            </div>
+    </div>
+
+    <!--Similar Product-->
+    <div class="container max-w-full mt-7 md:hidden">
+        <h1 class="font-play-fair font-bold ml-3 mb-2 md:hidden">Similar Products</h1>
+        
+        <div class="flex flex-wrap justify-center ">
+            <div id="for-you-products" class="grid grid-cols-2 gap-x-2 gap-y-2 mt-2 px-2 w-full flex-shrink-0 md:hidden">
+    
+                {% for product in mproducts %}
+                        <!-- Product Card 1 -->
+                        <a href="view/{{ product.product_id }}/">
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                <div class="relative pt-[100%]">
+                                    <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                    {% if product.product_discount > 0 %}
+                                        <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                            {{product.product_discount}}% OFF
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col justify-between">
+                                    <h2 class="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                        <div class="text-sm text-red-500 line-through">$99.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                {% endfor %}
+            </div>
+
+        </div>
+    
+            <div class="w-full mt-4 text-center font-lato font-semibold md:hidden">
+                <a href="#" >Show more</a>
+            </div>
+        </div>
+        
+    </div>
+
+
+    <!--Product Recommendation-->
+    <div class="md:mt-5  container max-w-full md:mb-5">
+
+        <!--Desktop View Products-->
+        <div class=" md:px-0 hidden md:flex md:justify-center container max-w-full w-full ">
+            <div class="container md:w-2/3  rounded-lg relative">
+                <div class="flex justify-between items-center md:justify-normal mb-4 md:w-full font-lato rounded-t-xl ">
+                    <div class="flex md:flex-1 space-x-2">
+                        <h1 class="font-lato font-bold text-xl mr-1">For You</h1>
+                    </div>
+                    <a href="#" class="font-lato font-semibold text-sm md:text-md md:text-end md:text-md">Show more</a>
+                </div>
+
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 font-lato">
+                    {% for product in dproducts %}
+                        <!-- Product Card 1 -->
+                        <a href="/view/{{ product.product_id }}/">
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border">
+                                <div class="relative pt-[100%]">
+                                    <img src="{{product.product_image.url}}" alt="Air Max" class="absolute top-0 left-0 w-full h-full object-cover">
+                                    {% if product.product_discount > 0 %}
+                                        <div class="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-xs font-bold">
+                                            {{product.product_discount}}% OFF
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col justify-between">
+                                    <h2 class="text-md font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
+                                        <div class="text-sm text-red-500 line-through">$99.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Notif-->
+    <div class="w-full sticky bottom-10 ">
+        <div class="justify-center hidden" id="notif">
+            <div class="bg-emerald-500 py-2 md:px-10 px-4 rounded-full shadow-md">
+                <h1 id="notif-text" class="md:text-lg font-bold font-lato text-white">Success</h1>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'js/view_product.js' %}"></script>
+{% endblock %}
