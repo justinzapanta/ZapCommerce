@@ -6,8 +6,12 @@
         "use": "@vercel/python",
         "config": {
           "maxLambdaSize": "15mb",
-          "runtime": "python3.9" 
+          "runtime": "python3.9"
         }
+      },
+      {
+        "src": "vercel-build.sh",
+        "use": "@vercel/static-build"
       }
     ],
     "routes": [
@@ -17,12 +21,8 @@
       },
       {
         "src": "/(.*)",
-        "dest": "Zapcommerce/wsgi.py" 
+        "dest": "Zapcommerce/wsgi.py"
       }
-    ],
-    "build": {
-      "commands": [
-        "python manage.py collectstatic --noinput" 
-      ]
-    }
+    ]
   }
+  
