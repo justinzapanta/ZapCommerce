@@ -18,13 +18,14 @@ class Products(models.Model):
     product_discount = models.IntegerField()
     product_search_key = models.TextField()
 
+    product_stripe_id = models.CharField(max_length=200)
+
     def __str__(self) -> str:
         return self.product_name
     
 
 class Cart(models.Model):
     cart_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    cart_number = models.IntegerField(default= 1)
     cart_product = models.ForeignKey(Products, on_delete=models.CASCADE)
     cart_product_size = models.CharField(max_length=100, null=True)
     cart_product_total_qt = models.IntegerField(null=True)
@@ -35,7 +36,13 @@ class Cart(models.Model):
     cart_price = models.IntegerField(null=True)
 
 
-class Purchase(models.Model):
-    purchase_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    purchase_cart_number = models.IntegerField()
-    purchase_total_price = models.IntegerField()
+class Transaction(models.Model):
+    transaction_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    transaction_product = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    transaction_status = models.CharField(max_length=100, default='Paid')
+    transaction_owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    transaction_invoice = models.IntegerField(default=1)
+    transaction_total_price = models.IntegerField()
+
+    def __str__(self) -> str:
+        return f'Invoice: {self.transaction_invoice} - {self.transaction_owner.username}'

@@ -1,7 +1,10 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
 from ..models import Products, Cart
+import json
+import stripe
+
+stripe.api_key = 'sk_test_51P3HpARwnxAlG0woM5gi4tvcSMK87cIzSUq8OJHAY7acjz3lomsKI3HKfPC65RvVvhxLlJbEGXZoQ00FdM3NSJ7700I0AqZ1yd'
 
 #cart
 @csrf_exempt
@@ -63,11 +66,27 @@ def update_product(request):
 
 @csrf_exempt
 def checkout(request):
-    data = json.loads(request.body)
-
     cart = Cart.objects.filter(
         cart_owner = request.user,
-        checkout = False
-        )
+        cart_checkout = False
+    )
+    
+    items = [
+        {
+            'price' : product.cart_product.product_stripe_id,
+            'quantity' : product.cart_product_total_qt
+        }
+        for product in cart
+    ]
+
+
+    link = stripe.checkout.Session.create(
+        line_items = items,
+        mode = "payment",
+        success_url = f"{request.scheme}://{request.get_host()}/api/transaction/complete",
+        cancel_url = f"{request.scheme}://{request.get_host()}/cart",
+    )
+    
+    return JsonResponse({'link' : link.url}, status = 200)
     
     

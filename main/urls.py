@@ -3,8 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .backend import cart
-from .backend import product
+from .backend import product, transaction, cart
 
 urlpatterns = [
     path('', views.store, name='store'),
@@ -26,5 +25,9 @@ urlpatterns = [
 
     #product
     path('api/product/get-all/<int:index>/<str:device>', product.get_products),
+
+
+    #transaction
+    path('api/transaction/complete', transaction.transaction_complete)
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -79,11 +79,26 @@ async function update_quantity(_this){
             headers : {'Content-Type' : 'application/json'},
             method : "POST",
             body : JSON.stringify({
-                id : _this.getAttribute('cart-id'),
+                id : _this.getAttribute('cart_id'),
                 quantity : quantity
             })
         })
     }else{
         show_dialog(_this)
+    }
+}
+
+
+async function check_out(){
+    const response = await fetch('/api/cart/checkout', {
+        method : 'POST',
+        headers : { "Content-Type" : "application/json" },
+        body : JSON.stringify({check_out : true})
+    })
+
+    const url = await response.json()
+
+    if (url){
+        window.location.href = url.link
     }
 }

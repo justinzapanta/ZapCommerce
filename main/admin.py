@@ -6,5 +6,5 @@ admin.site.register([
     
     models.Products,
     models.Cart,
-    models.Purchase,
+    models.Transaction,
 ])
