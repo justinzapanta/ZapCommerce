@@ -2,39 +2,37 @@
 {% load static %}
 
 {% block content %}
-    <div class="h-[70vh] w-full flex flex-col justify-center">
-        <div class="flex justify-center w-full">
-            <div class="bg-white p-8 rounded-lg border shadow-md relative">
+    <div class="min-h-screen w-full flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md">
+            <div class="bg-white p-6 sm:p-8 rounded-lg border shadow-md">
                 <form action="{% url 'sign-up' %}" method="post" id="register_form">
                     {% csrf_token %}
-                    <h1 class="text-center  text-3xl font-bold font-lato">Sign Up</h1>
-                    <div class="flex flex-col mt-4">
-                        <h1 class="font-lato text-red-400" id="notif">{{notif}}</h1>
-                        <label class="font-lato font-bold" for="username">Email</label>
-                        <input class="border w-[23rem] text-lg font-lato px-2 py-[0.30rem] mt-1" id="email" name="email" placeholder="Email" type="text" required>
-                    </div>
-                    <div class="mt-3 flex flex-col font-lato">
-                        <label class="font-lato font-bold" for="password">Password</label>
-                        <input class="border w-[23rem] text-lg font-lato px-2 py-[0.30rem] mt-1" id="password" placeholder="password" name="password" type="password" required>
-
-                        <div class="flex flex-col mt-4">
-                            <label class="font-lato font-bold" for="password">Confirm Password</label>
-                            <input class="border w-[23rem] text-lg font-lato px-2 py-[0.30rem] mt-1" id="confirm-password" placeholder="password" name="confirm-password" type="password" required>
+                    <h1 class="text-center text-2xl sm:text-3xl font-bold font-lato mb-6">Sign Up</h1>
+                    <div class="space-y-4">
+                        <h1 class="font-lato text-red-400 text-sm" id="notif">{{notif}}</h1>
+                        <div class="space-y-1">
+                            <label class="font-lato font-bold text-sm" for="email">Email</label>
+                            <input class="border w-full text-base sm:text-lg font-lato px-3 py-2 rounded" id="email" name="email" placeholder="Email" type="email" required>
                         </div>
-
+                        <div class="space-y-1">
+                            <label class="font-lato font-bold text-sm" for="password">Password</label>
+                            <input class="border w-full text-base sm:text-lg font-lato px-3 py-2 rounded" id="password" placeholder="Password" name="password" type="password" required>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="font-lato font-bold text-sm" for="confirm-password">Confirm Password</label>
+                            <input class="border w-full text-base sm:text-lg font-lato px-3 py-2 rounded" id="confirm-password" placeholder="Confirm password" name="confirm-password" type="password" required>
+                        </div>
                         <div class="w-full flex justify-end">
-                            <a href="#" class="text-sm font-bold mt-2">Forgot password?</a>
+                            <a href="#" class="text-xs sm:text-sm font-bold text-blue-600 hover:underline">Forgot password?</a>
                         </div>
                     </div>
-
-                    <div class="font-lato mt-5 w-full flex justify-center ">
-                        <button class="px-3 w-72 py-2 bg-slate-950 text-white rounded-full" type="button" onclick="sign_up()">SIGN UP</button>
+                    <div class="mt-6">
+                        <button class="w-full py-2 bg-slate-950 text-white rounded-full text-sm sm:text-base font-semibold hover:bg-slate-800 transition duration-300" type="button" onclick="sign_up()">SIGN UP</button>
                     </div>
-
-                    <div class="flex justify-center mt-20">
-                        <div>
-                            <a href="#" class="font-lato">Already have an account? <span class="font-bold">Sign Up</span></a>
-                        </div>
+                    <div class="mt-8 text-center">
+                        <a href="{% url 'sign-in' %}" class="font-lato text-sm">
+                            Already have an account? <span class="font-bold text-blue-600 hover:underline">Sign In</span>
+                        </a>
                     </div>
                 </form>
             </div>
@@ -43,7 +41,5 @@
 {% endblock %}
 
 {% block script %}
-
     <script src="{% static 'js/sign_up.js' %}"></script>
-
 {% endblock %}

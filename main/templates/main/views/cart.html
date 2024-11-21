@@ -2,120 +2,155 @@
 {% load static %}
 
 {% block content %}
-    <h1 class="text-center font-play-fair font-bold text-xl md:text-3xl md:mt-6 mt-4">SHOPPING CART</h1>
-    <div class="flex justify-center ">
-        <div class="md:w-2/3 md:mt-7 mt-5 w-full">
-
-            <div class="w-full md:px-5 border py-2 hidden md:block rounded-t-xl bg-white border-b-0">
-                <!--product Card-->
-                <div class="flex text-gray-400 ">
-                    <div class="md:grid hidden grid-cols-[1.5fr_1fr_1fr_1fr_1fr] w-full font-bold">
-                        <div class="h-full flex">
+    <div class="container mx-auto md:mt-7 px-1 md:px-4">
+        <div class="flex w-full ">
+            <div class="w-full flex">
+                <div class="flex-col space-y-3  md:block hidden">
+                    <a href="#" class="font-lato ">
+                        <div class="w-56 h-16 flex rounded-2xl hover:bg-gray-100 ">
+                            <div class="my-auto pl-4 text-gray-600 ">
+                                <i class="fas fa-user text-gray-500 text-xl mr-2"></i>
+                                My Profile
+                            </div>
+                        </div>
+                    </a>
     
-                        </div>
-
-                        <div class="h-full flex flex-col font-lato font-bold">
-                            <h1 class="font-lato text-md mt-1.5 text-center text-gray-400">Price</h1>
-                        </div>
-
-                        <div class="h-full flex flex-col font-lato font-bold">
-                            <div class="flex justify-center">
-                                <h1 class="font-lato text-md mt-1.5 text-center">Quantity</h1>
+                    <a href="#" class="font-lato ">
+                        <div class="w-56 h-16 flex rounded-2xl hover:bg-gray-100">
+                            <div class="my-auto  pl-3 ">
+                                <i class="fas fa-box-open text-gray-600 text-xl mr-1"></i>
+                                My Orders
                             </div>
                         </div>
-
-                        <div class="h-full flex flex-col font-lato  font-bold">
-                            <h1 class=" text-md mt-1.5 text-center">Total</h1>
-                        </div>
-
-                        <div class="h-full flex flex-col font-lato font-bold">
-                            <div class="flex justify-center">
-                                <h1 class="font-lato text-md mt-1.5 text-center">Action</h1>
+                    </a>
+    
+                    <a href="#" class="font-lato ">
+                        <div class="w-56 h-16 flex rounded-2xl bg-gray-200 mt-2">
+                            <div class="my-auto  pl-4 text-gray-600">
+                                <i class="fas fa-shopping-cart text-gray-700 text-xl mr-2"></i>
+                                My Cart
                             </div>
                         </div>
-                    </div>  
+                    </a>
                 </div>
-            </div>
 
-            <div class="w-full border md:px-4 px-0 py-2 h-[35rem] max-h-[35rem] md:border-t-gray-300 overflow-y-auto bg-white pt-0 rounded-xl rounded-t-none shadow-md">
-                {% if not cart_products %}
-                    <div class="flex flex-col h-full justify-center">
-                        <h1 class="font-lato text-2xl font-bold text-gray-400 text-center">No Product</h1>
-                {% else %}
-                    <div class="flex flex-col h-full">
-                {% endif %}
 
-                    {% for product in cart_products %}
-                        <!--product Card-->
-                        <div class="w-full" id="{{product.cart_id}}">
-                            <div class="md:grid md:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] md:px-0 px-3 w-full mt-4">
-                                <div class="h-full flex">
-
-                                    <a href="/view/{{product.cart_product.product_id}}"><img src="{{ product.cart_product.product_image.url }}" class="md:w-24 w-24 h-24 border rounded-md" alt=""></a>
-
-                                    <div class="h-full flex flex-col ml-2 md:mt-2 font-lato md:mr-8">
-                                        <a href="/view/{{product.cart_product.product_id}}" class="font-bold text-md line-clamp-2">{{ product.cart_product.product_name }}</a>
-                                        <h1 class="text-sm mt-1">Size: {{ product.cart_product_size }}</h1>
-                                        <h1 class="text-sm mt-1 md:hidden">Price: ₱{{ product.product_price }}</h1>
+                <div class="w-full md:ml-16 mt-4">
+                    <h1 class="font-play-fair font-bold text-xl md:text-4xl mt-4">SHOPPING CART</h1>
+                    <div class="md:mt-4 mt-4 w-full">
+                        <div class="w-full md:px-5 border py-2 hidden md:block rounded-t-xl bg-white border-b-0">
+                            <!--product Card-->
+                            <div class="flex text-gray-400">
+                                <div class="md:grid hidden grid-cols-[1.5fr_1fr_1fr_1fr_1fr] w-full font-bold">
+                                    <div class="h-full flex">
+                
                                     </div>
-                                </div>
-
-
-                                
-                                <div class="h-full md:flex flex-col justify-center font-lato hidden ">
-                                    <div class="flex justify-center">
-                                        <h1 class="mt-1.5">₱</h1><h1 class="font-lato  mt-1.5 " id="price-{{ forloop.counter }}">{{product.product_price}}</h1>
+        
+                                    <div class="h-full flex flex-col font-lato font-bold">
+                                        <h1 class="font-lato text-md mt-1.5 text-center text-gray-400">Price</h1>
                                     </div>
-                                </div>
-
-                                <div class="h-full md:flex flex-col justify-center font-lato hidden">
-                                    <div class="flex mt-1 justify-center">
-                                        <input onblur="update_quantity(this)" id="{{forloop.counter}}" cart_id="{{product.cart_id}}" type="number" class="w-24 h-8 pl-1 rounded-md text-md border py-2" value="{{ product.cart_product_total_qt }}">
-                                    </div>
-                                </div>
-
-                                <div class="h-full md:flex flex-col justify-center font-lato mt-4 md:mt-0">
-                                    <div class="flex md:justify-center justify-end">
-                                        <h1 onclick="show_dialog(this)" cart_id="{{product.cart_id}}" class="text-md flex-1 mt-1 text-red-400 hover:cursor-pointer md:hidden"><i class="fas fa-trash text-md" style="color: red; cursor: pointer;"></i></h1>
-
-                                        <div class=" flex md:justify-center">
-                                            <input onblur="update_quantity(this)" id="{{forloop.counter}}" cart_id="{{product.cart_id}}" type="number" class="w-24 h-8 pl-1  md:mr-0 mr-2 rounded-md text-md border py-2 md:hidden" value="{{ product.cart_product_total_qt }}">
-                                            <h1 class="mt-1.5">₱</h1><h1 class=" text-md mt-1.5 text-center total-price" id="total-price-{{ forloop.counter }}">{{ product.cart_product_total_price }} </h1>
+        
+                                    <div class="h-full flex flex-col font-lato font-bold">
+                                        <div class="flex justify-center">
+                                            <h1 class="font-lato text-md mt-1.5 text-center">Quantity</h1>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="h-full md:flex flex-col justify-center font-lato hidden">
-                                    <div class="w-full flex justify-center">
-                                        <h1 onclick="show_dialog(this)" cart_id="{{product.cart_id}}" class="text-md mt-1.5 text-red-400 hover:cursor-pointer"><span><i class="fas fa-trash text-2xl" style="color: rgb(248, 85, 85); cursor: pointer;"></i></span></h1>
+        
+                                    <div class="h-full flex flex-col font-lato  font-bold">
+                                        <h1 class=" text-md mt-1.5 text-center">Total</h1>
                                     </div>
-                                </div>
-
-
+        
+                                    <div class="h-full flex flex-col font-lato font-bold">
+                                        <div class="flex justify-center">
+                                            <h1 class="font-lato text-md mt-1.5 text-center">Action</h1>
+                                        </div>
+                                    </div>
+                                </div>  
                             </div>
-
-                            <hr class="mt-4">
                         </div>
-
-                    {% endfor %}
-
-                    
-                </div>
-            </div>
-
-
-            <!--Total Price-->
-            <div class="w-full bg-white shadow-md rounded-lg mt-4 md:px-5 py-4 px-3 border">
-                <div class="w-full flex h-full font-lato font-bold">
-                    <div class="flex-1 flex flex-col justify-center">
-                        <h1 id="display-total-price" class="md:text-lg font-lato font-bold">Total Price: {{total_price}}</h1>
-
+        
+                        <div class="w-full border border-t-0 md:px-4 px-0 py-2 h-[35rem] max-h-[35rem]  overflow-y-auto bg-white pt-0 rounded-xl rounded-t-none shadow-md">
+                            {% if not cart_products %}
+                                <div class="flex flex-col h-full justify-center">
+                                    <h1 class="font-lato text-2xl font-bold text-gray-400 text-center">No Product</h1>
+                            {% else %}
+                                <div class="flex flex-col h-full">
+                            {% endif %}
+        
+                                {% for product in cart_products %}
+                                    <!--product Card-->
+                                    <div class="w-full" id="{{product.cart_id}}">
+                                        <div class="md:grid md:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] md:px-0 px-3 w-full mt-4">
+                                            <div class="h-full flex">
+        
+                                                <a href="/view/{{product.cart_product.product_id}}"><img src="{{ product.cart_product.product_image.url }}" class="md:w-24 w-24 min-w-24 h-24 border rounded-md" alt=""></a>
+        
+                                                <div class="h-full flex flex-col ml-2 md:mt-2 font-lato md:mr-8">
+                                                    <a href="/view/{{product.cart_product.product_id}}" class="font-bold text-md line-clamp-2">{{ product.cart_product.product_name }}</a>
+                                                    <h1 class="text-sm mt-1">Size: {{ product.cart_product_size }}</h1>
+                                                    <h1 class="text-sm mt-1 md:hidden">Price: ₱{{ product.product_price }}</h1>
+                                                </div>
+                                            </div>
+        
+        
+                                            
+                                            <div class="h-full md:flex flex-col justify-center font-lato hidden ">
+                                                <div class="flex justify-center">
+                                                    <h1 class="mt-1.5">₱</h1><h1 class="font-lato  mt-1.5 " id="price-{{ forloop.counter }}">{{product.product_price}}</h1>
+                                                </div>
+                                            </div>
+        
+                                            <div class="h-full md:flex flex-col justify-center font-lato hidden">
+                                                <div class="flex mt-1 justify-center">
+                                                    <input onblur="update_quantity(this)" id="{{forloop.counter}}" cart_id="{{product.cart_id}}" type="number" class="w-24 h-8 pl-1 rounded-md text-md border py-2" value="{{ product.cart_product_total_qt }}">
+                                                </div>
+                                            </div>
+        
+                                            <div class="h-full md:flex flex-col justify-center font-lato mt-4 md:mt-0">
+                                                <div class="flex md:justify-center justify-end">
+                                                    <h1 onclick="show_dialog(this)" cart_id="{{product.cart_id}}" class="text-md flex-1 mt-1 text-red-400 hover:cursor-pointer md:hidden"><i class="fas fa-trash text-md" style="color: red; cursor: pointer;"></i></h1>
+        
+                                                    <div class=" flex md:justify-center">
+                                                        <input onblur="update_quantity(this)" id="{{forloop.counter}}" cart_id="{{product.cart_id}}" type="number" class="w-24 h-8 pl-1  md:mr-0 mr-2 rounded-md text-md border py-2 md:hidden" value="{{ product.cart_product_total_qt }}">
+                                                        <h1 class="mt-1.5">₱</h1><h1 class=" text-md mt-1.5 text-center total-price" id="total-price-{{ forloop.counter }}">{{ product.cart_product_total_price }} </h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+        
+                                            <div class="h-full md:flex flex-col justify-center font-lato hidden">
+                                                <div class="w-full flex justify-center">
+                                                    <h1 onclick="show_dialog(this)" cart_id="{{product.cart_id}}" class="text-md mt-1.5 text-red-400 hover:cursor-pointer"><span><i class="fas fa-trash text-2xl" style="color: rgb(248, 85, 85); cursor: pointer;"></i></span></h1>
+                                                </div>
+                                            </div>
+        
+        
+                                        </div>
+        
+                                        <hr class="mt-4">
+                                    </div>
+        
+                                {% endfor %}
+        
+                                
+                            </div>
+                        </div>
+        
+        
+                        <!--Total Price-->
+                        <div class="w-full bg-white shadow-md rounded-lg mt-4 md:px-5 py-4 px-3 border">
+                            <div class="w-full flex h-full font-lato font-bold">
+                                <div class="flex-1 flex flex-col justify-center">
+                                    <h1 id="display-total-price" class="md:text-lg font-lato font-bold">Total Price: {{total_price}}</h1>
+        
+                                </div>
+                                <button onclick="check_out()" class="text-white bg-slate-950 hover:bg-slate-800 font-lato md:py-2 md:px-10 px-8 py-2 text-sm  md:text-lg rounded-md">Check Out</button>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="check_out()" class="text-white bg-slate-950 md:py-3 md:px-10 px-8 py-2 text-sm  md:text-lg rounded-md">Check Out</button>
                 </div>
             </div>
         </div>
-    </div>
+
 
 
 

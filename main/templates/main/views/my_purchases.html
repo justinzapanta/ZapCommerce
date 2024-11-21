@@ -1,0 +1,94 @@
+{% extends 'main/parts/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="h-screen mx-auto container px-1 md:px-4 md:mt-7">
+        <div class="w-full flex">
+            <div class="flex-col space-y-3  md:block hidden">
+                <a href="#" class="font-lato ">
+                    <div class="w-56 h-16 flex rounded-2xl hover:bg-gray-100 ">
+                        <div class="my-auto pl-4 text-gray-600 ">
+                            <i class="fas fa-user text-gray-500 text-xl mr-2"></i>
+                            My Profile
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="font-lato ">
+                    <div class="w-56 h-16 flex bg-gray-200 rounded-2xl mt-2">
+                        <div class="my-auto  pl-3 ">
+                            <i class="fas fa-box-open text-gray-700 text-xl mr-1"></i>
+                            My Orders
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#" class="font-lato ">
+                    <div class="w-56 h-16 flex rounded-2xl mt-2 hover:bg-gray-100">
+                        <div class="my-auto  pl-4 text-gray-600">
+                            <i class="fas fa-shopping-cart text-gray-500 text-xl mr-2"></i>
+                            My Cart
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!--Products-->
+            <div class="w-full h-screen md:ml-16 flex-col mt-4">
+                <h1 class="font-play-fair text-4xl font-bold">Order History</h1>
+                <div class="flex font-lato space-x-2 md:space-y-0 flex-wrap flex-1 mt-7">
+                    <button class="px-4 py-2 border rounded-xl bg-slate-950 text-white border-gray-600">All</button>
+                    <button class="px-4 py-2 border rounded-xl border-gray-600 hover:bg-gray-200">In Progress</button>
+                    <button class="px-4 py-2 border rounded-xl border-gray-600 hover:bg-gray-200">Delivered</button>
+                    <button class="px-4 py-2 border rounded-xl border-gray-600 hover:bg-gray-200">cancelled</button>
+                </div>
+
+                <!--Order Product Container-->
+                <div class="w-full mt-3 space-y-4">
+                    {% if orders %}
+                        {% for item in orders %}
+                            <a href="#" id="{{ item.transaction_invoice }}">
+                                <div class="w-full h-36 shadow-md border rounded-xl px-3 py-3 mt-4 relative flex">
+                                    <img src="{{ item.transaction_product.cart_product.product_image.url }}" class="h-full w-28 min-w-28 rounded-lg" alt="">
+                                    <div>
+                                        
+                                    </div>
+                                    
+                                    <div class="flex flex-col justify-center w-72 mr-7 ml-2">
+                                        <h1 class=" font-bold text-md">{{ item.transaction_total_items }} items</h1>
+                                        <h1 class="text-sm font-lato line-clamp-1">
+                                            {{ item.transaction_product.cart_product.product_name }} 
+                                            {% if  item.transaction_total_items != 1 %}
+                                                and more
+                                            {% endif %}
+                                        </h1>
+                                    </div>
+
+                                    <div class="md:ml-4 flex flex-col justify-center w-full">                                
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 text-center">
+                                            <div>
+                                                <h2 class="font-bold text-sm mb-1">Price</h2>
+                                                <p class="font-lato text-md">₱{{ item.transaction_total_price }}</p>
+                                            </div>
+                                            <div>
+                                                <h2 class="font-bold text-sm mb-1">Status</h2>
+                                                <p class="font-lato text-md">{{ item.transaction_status }}</p>
+                                            </div>
+                                            <div>
+                                                <h2 class="font-bold text-sm mb-1">Date</h2>
+                                                <p class="font-lato text-md">{{ item.transaction_date }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                            <h1 class="font-lato text-lg ml-1">No Orders</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

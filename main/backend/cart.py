@@ -16,6 +16,7 @@ def add_product(request):
         cart_product = product[0], 
         cart_owner = request.user, 
         cart_product_size = data['product_size'],
+        cart_checkout = False,
         )
 
     if not exist_product:

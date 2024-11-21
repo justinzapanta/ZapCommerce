@@ -15,7 +15,7 @@ urlpatterns = [
     path('view/<str:product_id>/', views.view_product, name='view_product'),
     path('sign-in/<path:current_location>', views.sign_in, name='sign-in'),
     path('sign-out/', views.sign_out, name='sign-out'),
-    
+    path('orders/', views.order, name='orders'),
 
     #cart
     path('api/cart/add-product/', cart.add_product, name='add-product'),

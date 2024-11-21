@@ -130,5 +130,28 @@ def cart(request):
         for price in cart_products:
             total_price += price.cart_product_total_price
 
+        return render(request, 'main/views/cart.html', {'cart_products' : product_list, 'total_price' : '{:,}'.format(total_price)})
+    return redirect('sign-in')
 
-    return render(request, 'main/views/cart.html', {'cart_products' : product_list, 'total_price' : '{:,}'.format(total_price)})
+
+def order(request):
+    if request.user.is_authenticated:
+        orders = models.Transaction.objects.filter(transaction_owner = request.user ).order_by('-transaction_invoice').values('transaction_invoice').distinct()[:5]
+
+        order_list = []
+        try:
+            current_invoice = orders[0]['transaction_invoice']
+            for order in orders:
+                print(current_invoice)
+                if order['transaction_invoice'] == current_invoice:
+                    item = models.Transaction.objects.filter(
+                        transaction_owner = request.user,
+                        transaction_invoice = order['transaction_invoice']
+                    )
+                    order_list.append(item[0])
+                    current_invoice -= 1
+        except:
+            print('Error')
+
+        return render(request, 'main/views/my_purchases.html', {'orders' : order_list})
+    return redirect('sign-in', current_location=request.path)
