@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from ..models import Products, Cart
+from ..models import Products, Cart, User_info
+from django.shortcuts import redirect
 import json
 import stripe
 
@@ -9,30 +10,32 @@ stripe.api_key = 'sk_test_51P3HpARwnxAlG0woM5gi4tvcSMK87cIzSUq8OJHAY7acjz3lomsKI
 #cart
 @csrf_exempt
 def add_product(request):
-    data = json.loads(request.body)
-    product = Products.objects.filter(product_id = data['id'])
-    
-    exist_product = Cart.objects.filter(
-        cart_product = product[0], 
-        cart_owner = request.user, 
-        cart_product_size = data['product_size'],
-        cart_checkout = False,
-        )
-
-    if not exist_product:
-        cart = Cart(
-            cart_checkout = False, 
-            cart_product = product[0],
-            cart_owner = request.user,
-            cart_product_size = data['product_size'],
-            cart_product_total_qt = 1,
-            cart_product_total_price = product[0].product_price,
-            cart_price = 0
-            )
-        cart.save()
+    if request.user.is_authenticated:
+        data = json.loads(request.body)
+        product = Products.objects.filter(product_id = data['id'])
         
-        return JsonResponse({'message' : 'Added Successfully'}, status=200)
-    return JsonResponse({'hello' : 'hi'}, status=200)
+        exist_product = Cart.objects.filter(
+            cart_product = product[0], 
+            cart_owner = request.user, 
+            cart_product_size = data['product_size'],
+            cart_checkout = False,
+            )
+
+        if not exist_product:
+            cart = Cart(
+                cart_checkout = False, 
+                cart_product = product[0],
+                cart_owner = request.user,
+                cart_product_size = data['product_size'],
+                cart_product_total_qt = 1,
+                cart_product_total_price = product[0].product_price,
+                cart_price = 0
+                )
+            cart.save()
+            
+            return JsonResponse({'message' : 'Added Successfully'}, status=200)
+        return JsonResponse({'message' : 'error'}, status=200)
+    return redirect('sign-in')
 
     
 @csrf_exempt
@@ -67,27 +70,33 @@ def update_product(request):
 
 @csrf_exempt
 def checkout(request):
-    cart = Cart.objects.filter(
-        cart_owner = request.user,
-        cart_checkout = False
-    )
-    
-    items = [
-        {
-            'price' : product.cart_product.product_stripe_id,
-            'quantity' : product.cart_product_total_qt
-        }
-        for product in cart
-    ]
+    link_url = ''
+    user = User_info.objects.get(user_auth_credentials = request.user)
+    if user.user_firstName == '' or user.user_address == '':
+        link_url = '/profile'
+    else:
+        cart = Cart.objects.filter(
+            cart_owner = request.user,
+            cart_checkout = False
+        )
+        
+        items = [
+            {
+                'price' : product.cart_product.product_stripe_id,
+                'quantity' : product.cart_product_total_qt
+            }
+            for product in cart
+        ]
 
 
-    link = stripe.checkout.Session.create(
-        line_items = items,
-        mode = "payment",
-        success_url = f"{request.scheme}://{request.get_host()}/api/transaction/complete",
-        cancel_url = f"{request.scheme}://{request.get_host()}/cart",
-    )
-    
-    return JsonResponse({'link' : link.url}, status = 200)
+        link = stripe.checkout.Session.create(
+            line_items = items,
+            mode = "payment",
+            success_url = f"{request.scheme}://{request.get_host()}/api/transaction/complete",
+            cancel_url = f"{request.scheme}://{request.get_host()}/cart",
+        )
+        
+        link_url = link.url
+    return JsonResponse({'link' : link_url}, status = 200)
     
     

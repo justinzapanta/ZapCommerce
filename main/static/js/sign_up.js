@@ -9,7 +9,11 @@ function sign_up(){
         if (password.value != confirm_password.value){
             notif.textContent = "Passwords don't match"
         }else{
-            register_form.submit()
+            if (String(email.value).includes('@gmail.com')){
+                register_form.submit()
+            }else{
+                notif.textContent = "Your username must be a valid Gmail address ending with @gmail.com"
+            }
         }
     }else{
         notif.textContent = 'Password must be at least 8 characters'

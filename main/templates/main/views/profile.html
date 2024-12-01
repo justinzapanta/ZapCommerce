@@ -1,0 +1,140 @@
+{% extends 'main/parts/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class=" mx-auto container px-1 md:px-4 md:mt-7">
+        <div class="w-full flex">
+            <div class="flex-col space-y-3  md:block hidden">
+                <a class="font-lato ">
+                    <div class="w-56 h-16 flex rounded-2xl bg-gray-200 ">
+                        <div class="my-auto pl-4 text-gray-800 ">
+                            <i class="fas fa-user text-gray-800 text-xl mr-2"></i>
+                            My Profile
+                        </div>
+                    </div>
+                </a>    
+
+                <a href="{% url 'orders' %}" class="font-lato ">
+                    <div class="w-56 h-16 flex  rounded-2xl mt-2 hover:bg-gray-100 ">
+                        <div class="my-auto  pl-3 text-gray-600">
+                            <i class="fas fa-box-open text-gray-500 text-xl mr-1"></i>
+                            My Orders
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'cart' %}" class="font-lato ">
+                    <div class="w-56 h-16 flex rounded-2xl mt-2 hover:bg-gray-100">
+                        <div class="my-auto  pl-4 text-gray-600">
+                            <i class="fas fa-shopping-cart text-gray-500 text-xl mr-2"></i>
+                            My Cart
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!--Profile-->
+            <div class="w-full md:ml-16 mt-4">
+                <h1 class="font-play-fair text-4xl font-bold">My Profile</h1>
+                <div class="w-full bg-white shadow-md mt-5 rounded-2xl py-10 px-16 border flex flex-col">
+                    <form action="/profile/" method="POST">
+                        {% csrf_token %}
+                    <!--Image-->
+                    <div class="flex">
+                        <div class="flex-1 justify-center">
+                            <div class="flex h-fit">
+                                <div class="w-32 h-32  rounded-full">
+                                    <img src="{% static 'image/airmax.png' %}" class="w-32 h-32  rounded-full" alt="">
+                                </div>
+
+                                <div class="h-full my-auto ml-2 font-lato font-bold text-lg">
+                                    <h1>Profile Picture</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-full my-auto">
+                            <button class="py-2.5 font-bold px-7 border bg-slate-950 text-white font-lato rounded-lg hover:bg-slate-800">
+                                <i class="fas fa-upload mr-2"></i>
+                                Upload Picture
+                            </button>
+                        </div>
+                    </div>
+
+                    <!--User Info-->
+                    <div class="mt-10 font-lato text-lg">
+                        <!--User Name-->
+                        <div>
+                            <h1>Full Name</h1>
+                            <div class="w-full grid grid-cols-2 gap-x-6 mt-4">
+                                <div>
+                                    <input required type="text" name="first-name" class="w-full h-12 border rounded-md border-slate-900 font-lato pl-1.5" value="{{user_info.0.user_firstName}}" placeholder="First Name">
+                                </div>
+                                <div>
+                                    <input required type="text" name="last-name" class="w-full h-12 border rounded-md border-slate-900 font-lato pl-1.5" value="{{user_info.0.user_lastName}}" placeholder="Last Name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="mt-4 border-gray-300">
+
+                        <div class="w-full mt-4">
+                            <h1>Contact Email</h1>
+                            <div class="mt-3 grid grid-cols-2 gap-x-6">
+                                <p class="text-sm text-gray-500">Your email will be used to send order confirmations, updates about your purchases, and exclusive promotional offers. We value your privacy and ensure your email is secure.</p>
+                                <input required type="text" name="email" readonly value="{{user_info.0.user_auth_credentials.username}}" placeholder="Email" class="w-full h-12 border rounded-md text-gray-500 border-slate-900 font-lato pl-1.5">
+                            </div>
+                        </div>
+                        <hr class="mt-4 border-gray-300">
+                        <div class="w-full mt-3">
+                            <h1>Address</h1>
+                            <div class="mt-3 grid grid-cols-2 gap-x-6">
+                                <p class="text-sm text-gray-500">Your address is needed to ensure accurate delivery of your orders and to calculate shipping costs. We use this information only for order fulfillment and never share it without your consent.</p>
+                                <input required type="text" name="address" value="{{user_info.0.user_address}}"   placeholder="Address" class="w-full h-12 border rounded-md border-slate-900 font-lato pl-1.5">
+                            </div>
+                        </div>
+
+                        <div class="my-6 w-full flex justify-end">
+                            <div class="flex">
+                                <button type="submit" class="px-16 py-2 bg-slate-950 hover:bg-slate-800 text-white rounded-lg border">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+
+                    <h1 class="text-xl font-lato mt-10">Change Password</h1>
+                    <form id="auth-form" action="/api/profile/update/password" method="POST">
+                        {% csrf_token %}
+                        <div class="w-full">
+
+                            <div class="w-full grid grid-cols-2 mt-8 gap-x-6">
+                                <div>
+                                    <div class="flex">
+                                        <h1 class="font-lato mb-1 mr-4">Current Password</h1> <h1 id="current_password_notif" class="text-red-500"></h1>
+                                    </div>
+                                    <input type="password" id="current_passowrd" name="current_passowrd" placeholder="Current Password" class="w-full h-12 border rounded-md border-slate-900 font-lato pl-1.5">
+                                </div>
+
+                                <div>
+                                    <div class="flex">
+                                        <h1 class="font-lato mb-1 mr-4">New Password</h1> <h1 id="notif" class="text-red-500 hidden">Password must be at least 8 characters</h1>
+                                    </div>
+                                    <input type="password" id="new_password" name="new_password" placeholder="New Password" class="w-full h-12 border rounded-md border-slate-900 font-lato pl-1.5">
+                                </div>
+                            </div>
+                            <div class="my-6 w-full flex justify-end">
+                                <div class="flex">
+                                    <button onclick="submit_form()" type="button" class="px-16 py-3 bg-slate-950 hover:bg-slate-800 text-white rounded-lg border font-lato font-bold">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

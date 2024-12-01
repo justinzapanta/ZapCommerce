@@ -4,6 +4,15 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class User_info(models.Model):
+    user_id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, unique=True)
+    user_auth_credentials = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_firstName = models.CharField(max_length=50)
+    user_lastName = models.CharField(max_length=50)
+    user_address = models.CharField(max_length=250)
+    user_profilePicture = models.ImageField(upload_to='.main/static/image', default=None, null=True, blank=True )
+
+
 class Products(models.Model):
     product_id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True, editable=False)
     product_image = models.ImageField(upload_to='./main/static/img/project_img', default=None, null=True)

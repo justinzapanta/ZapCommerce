@@ -16,14 +16,13 @@
                         </div>
                         <div class="space-y-1">
                             <label class="font-lato font-bold text-sm" for="password">Password</label>
-                            <input class="border w-full text-base sm:text-lg font-lato px-3 py-2 rounded" id="password" placeholder="Password" name="password" type="password" required>
+                            <input class="border w-full text-base sm:text-lg font-lato px-3 py-2 rounded" id="password" placeholder="Password" name="password" pattern="^(?=.*[0-9])(?=.*[@!#?$%^&*])[A-Za-z\d@!#?$%^&*]{8,}$" type="password" required>
                         </div>
                         <div class="space-y-1">
                             <label class="font-lato font-bold text-sm" for="confirm-password">Confirm Password</label>
                             <input class="border w-full text-base sm:text-lg font-lato px-3 py-2 rounded" id="confirm-password" placeholder="Confirm password" name="confirm-password" type="password" required>
                         </div>
                         <div class="w-full flex justify-end">
-                            <a href="#" class="text-xs sm:text-sm font-bold text-blue-600 hover:underline">Forgot password?</a>
                         </div>
                     </div>
                     <div class="mt-6">

@@ -5,7 +5,7 @@
     <div class="h-screen mx-auto container px-1 md:px-4 md:mt-7">
         <div class="w-full flex">
             <div class="flex-col space-y-3  md:block hidden">
-                <a href="#" class="font-lato ">
+                <a href="{% url 'profile' %}" class="font-lato ">
                     <div class="w-56 h-16 flex rounded-2xl hover:bg-gray-100 ">
                         <div class="my-auto pl-4 text-gray-600 ">
                             <i class="fas fa-user text-gray-500 text-xl mr-2"></i>
@@ -16,14 +16,14 @@
 
                 <a href="#" class="font-lato ">
                     <div class="w-56 h-16 flex bg-gray-200 rounded-2xl mt-2">
-                        <div class="my-auto  pl-3 ">
+                        <div class="my-auto  pl-3 text-gray-800">
                             <i class="fas fa-box-open text-gray-700 text-xl mr-1"></i>
                             My Orders
                         </div>
                     </div>
                 </a>
 
-                <a href="#" class="font-lato ">
+                <a href="{% url 'cart' %}" class="font-lato ">
                     <div class="w-56 h-16 flex rounded-2xl mt-2 hover:bg-gray-100">
                         <div class="my-auto  pl-4 text-gray-600">
                             <i class="fas fa-shopping-cart text-gray-500 text-xl mr-2"></i>
@@ -37,17 +37,26 @@
             <div class="w-full h-screen md:ml-16 flex-col mt-4">
                 <h1 class="font-play-fair text-4xl font-bold">Order History</h1>
                 <div class="flex font-lato space-x-2 md:space-y-0 flex-wrap flex-1 mt-7">
-                    <button class="px-4 py-2 border rounded-xl bg-slate-950 text-white border-gray-600">All</button>
-                    <button class="px-4 py-2 border rounded-xl border-gray-600 hover:bg-gray-200">In Progress</button>
-                    <button class="px-4 py-2 border rounded-xl border-gray-600 hover:bg-gray-200">Delivered</button>
-                    <button class="px-4 py-2 border rounded-xl border-gray-600 hover:bg-gray-200">cancelled</button>
+
+                    <a href="/orders" class="px-4 py-2 border rounded-xl 
+                    {% if location == 'all' %}bg-slate-950 text-white {% else %} text-black hover:bg-gray-200  {% endif %}border-gray-600">
+                    All</a>
+
+                    <a href="/orders/In Progress" class="px-4 py-2 border rounded-xl border-gray-600 {% if location == 'In Progress' %}bg-slate-950 text-white {% else %} text-black hover:bg-gray-200  {% endif %}">
+                    In Progress</a>
+
+                    <a href="/orders/Delivered" class="px-4 py-2 border rounded-xl border-gray-600 {% if location == 'Delivered' %}bg-slate-950 text-white {% else %} text-black hover:bg-gray-200  {% endif %}">
+                        Delivered</a>
+
+                    <a href="/orders/Cancelled" class="px-4 py-2 border rounded-xl border-gray-600 {% if location == 'Cancelled' %}bg-slate-950 text-white {% else %} text-black hover:bg-gray-200  {% endif %}">
+                        cancelled</a>
                 </div>
 
                 <!--Order Product Container-->
-                <div class="w-full mt-3 space-y-4">
+                <div class="w-full mt-3 space-y-4 relative">
                     {% if orders %}
                         {% for item in orders %}
-                            <a href="#" id="{{ item.transaction_invoice }}">
+                            <a class="hover:cursor-pointer" onclick="show_products(this)" id="{{ item.transaction_invoice }}">
                                 <div class="w-full h-36 shadow-md border rounded-xl px-3 py-3 mt-4 relative flex">
                                     <img src="{{ item.transaction_product.cart_product.product_image.url }}" class="h-full w-28 min-w-28 rounded-lg" alt="">
                                     <div>
@@ -90,5 +99,113 @@
             </div>
         </div>
     </div>
+
+
+    <!--Modal-->
+    <div id="modal" class="w-full h-screen absolute top-0 right-0 z-30  flex-col justify-center hidden">
+        <div class="w-full flex justify-center">
+            <div class="w-[55rem] min-h-[35rem] rounded-2xl shadow-2xl z-40 border bg-white relative pt-10 pl-4">
+
+                <!--Cancel modal-->
+                <div id="cancel-order-modal" class="h-full w-full absolute top-0 left-0 flex-col justify-center hidden">
+                    <div class="w-full flex justify-center">
+                        <div class="bg-white shadow-2xl border rounded-xl w-96 h-52 flex flex-col justify-center">
+                            <div class="w-full flex justify-center">
+                                <div class="flex-col flex px-10">
+                                    <i class="fas fa-triangle-exclamation text-red-500 text-center text-4xl"></i>
+                                    <h1 class="text-center font-bold font-lato text-lg">Do you want to proceed with canceling your order?</h1>
+
+                                    <div class="flex w-full justify-center mt-7 space-x-4">
+                                        <button onclick="close_modal('cancel_modal')" class="w-32 h-10 font-bold font-lato rounded-lg hover:bg-slate-800 bg-slate-950 text-white">Close</button>
+                                        <button onclick="cancel_orderNow()" class="w-32 h-10 font-bold font-lato rounded-lg hover:bg-red-600 bg-red-500 text-white">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Cancel modal-->
+
+                <a onclick="close_modal('orders_modal')" class="hover:cursor-pointer absolute top-2 right-4 font-bold font-lato">X</a>
+                <div class="max-h-[450px] overflow-y-auto border-b mb-20">
+                    <h1 class="font-bold font-lato text-lg">Items</h1>
+                    <div id="item-container" class="flex flex-col">
+                        
+                        <div class="flex mt-4 mr-4 bg-gray-100 rounded-xl pr-4">
+                            <img src="{% static 'image/airmax.png' %}" class="w-24 h-24 rounded-lg" alt="">
+                            <div class="h-full my-auto ml-2 flex-1">
+                                <h1 class="font-bold font-lato">Nike Classic Sneakers (5)</h1>
+                                <h1 class="font-bold font-lato text-sm">Size: Small</h1>
+                            </div>
+                            <div class="h-full my-auto font-lato">
+                                <h1>₱2000</h1>
+                            </div>
+                        </div>
+
+
+                        <div class="flex mt-4 mr-4 bg-gray-100 rounded-xl pr-4">
+                            <img src="{% static 'image/airmax.png' %}" class="w-24 h-24 rounded-lg" alt="">
+                            <div class="h-full my-auto ml-2 flex-1">
+                                <h1 class="font-bold font-lato">Nike Classic Sneakers (5)</h1>
+                                <h1 class="font-bold font-lato text-sm">Size: Small</h1>
+                            </div>
+                            <div class="h-full my-auto font-lato">
+                                <h1>₱2000</h1>
+                            </div>
+                        </div>
+
+
+
+                        <div class="flex mt-4 mr-4 bg-gray-100 rounded-xl pr-4">
+                            <img src="{% static 'image/airmax.png' %}" class="w-24 h-24 rounded-lg" alt="">
+                            <div class="h-full my-auto ml-2 flex-1">
+                                <h1 class="font-bold font-lato">Nike Classic Sneakers (5)</h1>
+                                <h1 class="font-bold font-lato text-sm">Size: Small</h1>
+                            </div>
+                            <div class="h-full my-auto font-lato">
+                                <h1>₱2000</h1>
+                            </div>
+                        </div>
+
+                        <div class="flex mt-4 mr-4 bg-gray-100 rounded-xl pr-4">
+                            <img src="{% static 'image/airmax.png' %}" class="w-24 h-24 rounded-lg" alt="">
+                            <div class="h-full my-auto ml-2 flex-1">
+                                <h1 class="font-bold font-lato">Nike Classic Sneakers (5)</h1>
+                                <h1 class="font-bold font-lato text-sm">Size: Small</h1>
+                            </div>
+                            <div class="h-full my-auto font-lato">
+                                <h1>₱2000</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 absolute bottom-0 w-full">
+                    <div class="w-full flex mt-4 h-full mb-4">
+                        <div class="flex-1">
+                            <button onclick="cancel_order()" id="modal-cancel" class="px-10 bg-red-500 hover:bg-red-600 py-3 rounded-xl text-white font-lato font-bold">Cancel Order</button>
+    
+                        </div>
+                        <div class="h-full my-auto">
+                            <h1 id="motal-totalPrice" class="mr-10 font-bold font-lato text-lg">Total Price: 10,000</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Loading-->
+    <div id="loading" class="absolute w-full top-0 h-full flex flex-col justify-center hidden">
+        <div class="w-full flex justify-center">
+            <div id="loading_" class="animate-spin rounded-full mt-6 h-20 w-20 border-t-2 border-b-2 border-black relative">
+                <i class="fas fa-shopping-cart text-4xl text-black absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/my_purchases.js' %}"></script>
 {% endblock %}
 

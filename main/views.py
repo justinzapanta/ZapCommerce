@@ -98,13 +98,18 @@ def sign_up(request):
 
         if not email_exist:
             register_user = User.objects.create_user(
-                username = email, 
+                username = email,
                 password=request.POST['password']
             )
             register_user.save()
+
+            user_info = models.User_info(user_auth_credentials = register_user)
+            user_info.save()
+
             return redirect('sign-in')
         else:
             data['notif'] = 'Email already registered'
+
     return render(request, 'main/views/sign_up.html', data)
 
 
@@ -134,15 +139,16 @@ def cart(request):
     return redirect('sign-in')
 
 
-def order(request):
+def order(request, status='all'):
     if request.user.is_authenticated:
-        orders = models.Transaction.objects.filter(transaction_owner = request.user ).order_by('-transaction_invoice').values('transaction_invoice').distinct()[:5]
+        orders = models.Transaction.objects.filter(transaction_owner = request.user).order_by('-transaction_invoice').values('transaction_invoice').distinct()[:5]
+        if status != 'all':
+            orders = models.Transaction.objects.filter(transaction_owner = request.user, transaction_status = status ).order_by('-transaction_invoice').values('transaction_invoice').distinct()[:5]
 
         order_list = []
         try:
             current_invoice = orders[0]['transaction_invoice']
             for order in orders:
-                print(current_invoice)
                 if order['transaction_invoice'] == current_invoice:
                     item = models.Transaction.objects.filter(
                         transaction_owner = request.user,
@@ -153,5 +159,21 @@ def order(request):
         except:
             print('Error')
 
-        return render(request, 'main/views/my_purchases.html', {'orders' : order_list})
+        return render(request, 'main/views/my_purchases.html', {'orders' : order_list, 'location' : status})
     return redirect('sign-in', current_location=request.path)
+
+
+def profile(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            user = models.User_info.objects.get(user_auth_credentials = request.user)
+            user.user_firstName = request.POST['first-name']
+            user.user_lastName = request.POST['last-name']
+            user.user_address = request.POST['address']
+            user.save()
+        
+        user_info = models.User_info.objects.filter(user_auth_credentials = request.user)
+        print(user_info)
+        return render(request, 'main/views/profile.html', {'user_info' : user_info})
+    else :
+         return redirect('sign-in')
