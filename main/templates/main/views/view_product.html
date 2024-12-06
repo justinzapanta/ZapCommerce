@@ -146,9 +146,15 @@
                         <a class="md:shadow-md md:bg-white hover:cursor-pointer rounded-xl w-full md:px-2 md:pr-4 md:pb-4">
                             <div class="flex mt-4">
                                 <!--User Profile-->
-                                <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
-            
-                                </div>
+                                {% if user_review.review_user.user_profilePicture %}
+                                    <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+                                        <img src="{{ user_review.review_user.user_profilePicture.url }}" class="w-10 h-10 rounded-full" alt="">
+                                    </div>
+                                {% else %}
+                                    <div class="w-10 h-10 rounded-full bg-gray-200 mr-2">
+                                        <img src="https://static.vecteezy.com/system/resources/previews/003/715/527/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg" class="w-10 h-10 rounded-full" alt="">
+                                    </div>
+                                {% endif %}
             
                                 <!--User name-->
                                 <div class="h-10 flex flex-col justify-center">
@@ -240,7 +246,7 @@
         </div>
     
             <div class="w-full mt-4 text-center font-lato font-semibold md:hidden">
-                <a href="#" >Show more</a>
+                <a href="http://127.0.0.1:8000/products/" >Show more</a>
             </div>
         </div>
         
@@ -257,7 +263,7 @@
                     <div class="flex md:flex-1 space-x-2">
                         <h1 class="font-lato font-bold text-xl mr-1">For You</h1>
                     </div>
-                    <a href="#" class="font-lato font-semibold text-sm md:text-md md:text-end md:text-md">Show more</a>
+                    <a href="http://127.0.0.1:8000/products/" class="font-lato font-semibold text-sm md:text-md md:text-end md:text-md">Show more</a>
                 </div>
 
 

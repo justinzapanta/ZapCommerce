@@ -184,3 +184,4 @@ async function delete_product(){
 
     location.reload()
 }
+

@@ -10,7 +10,7 @@ class User_info(models.Model):
     user_firstName = models.CharField(max_length=50)
     user_lastName = models.CharField(max_length=50)
     user_address = models.CharField(max_length=250)
-    user_profilePicture = models.ImageField(upload_to='.main/static/image', default=None, null=True, blank=True )
+    user_profilePicture = models.ImageField(upload_to='./main/static/img/project_img', default=None, null=True, blank=True )
 
 
 class Products(models.Model):
@@ -29,6 +29,7 @@ class Products(models.Model):
     product_current_price = models.IntegerField()
     product_stripe_id = models.CharField(max_length=200, null=True)
     product_total_review = models.IntegerField(null=True)
+    product_id_stripe = models.CharField(max_length=200, null=True)
 
     def __str__(self) -> str:
         return self.product_name

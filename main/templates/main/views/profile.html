@@ -44,20 +44,22 @@
                     <div class="flex">
                         <div class="flex-1 justify-center">
                             <div class="flex h-fit">
-                                <div class="w-32 h-32  rounded-full">
-                                    <img src="{% static 'image/airmax.png' %}" class="w-32 h-32  rounded-full" alt="">
-                                </div>
-
+                                {% if user_info.0.user_profilePicture %}
+                                    <div class="w-32 h-32  rounded-full">
+                                        <img src="{{ user_info.0.user_profilePicture.url }}" class="w-32 h-32 object-cover rounded-full" alt="">
+                                    </div>
+                                {% else %}
+                                    <div class="w-32 h-32  rounded-full">
+                                        <img src="https://static.vecteezy.com/system/resources/previews/003/715/527/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg" class="w-32 h-32  rounded-full" alt="">
+                                    </div>
+                                {% endif %}
                                 <div class="h-full my-auto ml-2 font-lato font-bold text-lg">
                                     <h1>Profile Picture</h1>
                                 </div>
                             </div>
                         </div>
                         <div class="h-full my-auto">
-                            <button class="py-2.5 font-bold px-7 border bg-slate-950 text-white font-lato rounded-lg hover:bg-slate-800">
-                                <i class="fas fa-upload mr-2"></i>
-                                Upload Picture
-                            </button>
+                            <input onchange="profile_pic_uploaded(this)" id="profile-picture" class="block w-full bg-slate-950 text-lg border rounded-lg cursor-pointer text-white dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
                         </div>
                     </div>
 

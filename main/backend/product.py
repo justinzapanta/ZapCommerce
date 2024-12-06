@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ..models import Products, Product_star, User_review, Product_star, User_info
 from django.core import serializers
+from .stripe_ import create_stripe_product, update_stripe_product
 import json
 
 @csrf_exempt
@@ -77,6 +78,9 @@ def update_product(request):
 
         update_product.save()
 
+
+        update_stripe_product(update_product)
+
         return JsonResponse({'message' : 'success'}, status=200)
     return JsonResponse({'message' : 'error'}, status=404)
 
@@ -100,9 +104,13 @@ def create_product(request):
         )
 
         new_product.save()
+        
+        product = Products.objects.filter(product_id = new_product.product_id)
+        create_stripe_product(product)
 
         ratings = Product_star(product = new_product)
         ratings.save()
+        
         return JsonResponse({'message' : 'success' })
     return JsonResponse({'message' : 'error' })
 

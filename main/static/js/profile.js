@@ -26,3 +26,21 @@ async function submit_form() {
         notif.classList.remove('hidden')
     }
 }
+
+
+
+async function profile_pic_uploaded(this_){
+    const image = document.querySelector(`#${this_.id}`)
+    
+    if (image.files[0]){
+        form_data = new FormData()
+        form_data.append('profile_picture', image.files[0])
+
+        const response = await fetch('/api/profile/update/profile-picture', {
+            method : 'POST',
+            body : form_data
+        })
+
+        location.reload()
+    }
+}

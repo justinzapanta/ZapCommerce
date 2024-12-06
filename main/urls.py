@@ -45,6 +45,7 @@ urlpatterns = [
     #profile
     path('api/profile/update/password', profile.change_password),
     path('api/profile/verify/password', profile.check_user_password),
+    path('api/profile/update/profile-picture', profile.update_profiePicture),
 
 
     #admin

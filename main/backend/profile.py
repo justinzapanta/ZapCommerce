@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from ..models import User_info
 import json
 
 
@@ -30,3 +31,17 @@ def check_user_password(request):
                 return JsonResponse({'message' : 'Invalid Password'}, status=200)
             
     return redirect('sign-in')
+
+
+@csrf_exempt
+def update_profiePicture(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            if request.FILES.get('profile_picture'):
+
+                user_profile = User_info.objects.get(user_auth_credentials = request.user)
+                user_profile.user_profilePicture = request.FILES['profile_picture']
+                user_profile.save()
+
+            return JsonResponse({'message' : 'success'}, status=200)
+    return JsonResponse({'message' : 'error'}, status=404)
