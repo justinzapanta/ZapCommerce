@@ -67,3 +67,21 @@ document.addEventListener('click', (event) => {
         userMenu.classList.add('hidden');
     }
 });
+
+
+
+const cart_notif = document.querySelector('#cart-notif')
+
+async function get_cart_totalItem(){
+    const response = await fetch('/api/cart/total-item', {
+        method : 'POST',
+        headers : {'Content-Type' : 'application/json'},
+        body : JSON.stringify({ 'update' : 'true' })
+    })
+
+    const res_json = await response.json()
+
+    cart_notif.textContent = res_json.count
+}
+
+get_cart_totalItem()

@@ -14,6 +14,7 @@ function delete_product(id){
             const product = document.getElementById(id)
             
             if (product){
+                get_cart_totalItem()
                 product.remove()
                 total_price()
             }

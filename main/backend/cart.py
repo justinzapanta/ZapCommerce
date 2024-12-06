@@ -28,7 +28,7 @@ def add_product(request):
                 cart_owner = request.user,
                 cart_product_size = data['product_size'],
                 cart_product_total_qt = 1,
-                cart_product_total_price = product[0].product_price,
+                cart_product_total_price = product[0].product_current_price,
                 cart_price = 0
                 )
             cart.save()
@@ -59,7 +59,7 @@ def update_product(request):
             cart_checkout = False
             )
 
-        price = int(cart[0].cart_product.product_price) * int(data['quantity'])
+        price = int(cart[0].cart_product.product_current_price) * int(data['quantity'])
         update_cart = cart.update(
             cart_product_total_qt = data['quantity'],
             cart_product_total_price = price
@@ -99,4 +99,13 @@ def checkout(request):
         link_url = link.url
     return JsonResponse({'link' : link_url}, status = 200)
     
-    
+
+
+@csrf_exempt
+def total_item(request):
+    if request.method == 'POST':
+        total_product = Cart.objects.filter(cart_owner = request.user, cart_checkout = False).count()
+        print(total_product)
+        
+        return JsonResponse({'count': total_product})
+    return JsonResponse({'message': 'error'})

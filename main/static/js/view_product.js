@@ -1,26 +1,4 @@
 const carousel = document.getElementById('carousel');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const imageIndex = document.getElementById('image-index')
-let currentIndex = 0;
-
-function showSlide(index, carousel) {
-    currentIndex = index;
-    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-}
-
-prevBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex - 1 + 4) % 4;
-    imageIndex.textContent = parseInt(currentIndex) + 1
-    showSlide(currentIndex, carousel);
-});
-
-nextBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % 4;
-    imageIndex.textContent = parseInt(currentIndex) + 1
-    showSlide(currentIndex, carousel);
-});
-
 
 //get product size
 let product_sizee = 0
@@ -48,6 +26,7 @@ function add_to_cart(_this){
             request.onloadend = () => {
                 const response = JSON.parse(request.responseText)
                 if (response.message == 'Added Successfully'){
+                    get_cart_totalItem()
                     text.textContent = response.message
                 }else{
                     text.textContent = 'Already Added'
@@ -64,3 +43,28 @@ function add_to_cart(_this){
         }
     }
 }
+
+
+const starRating = document.querySelector('#starRating')
+
+async function rate(){
+    const rate = parseFloat(starRating.getAttribute('rate'))
+    const fullStars = Math.floor(rate)
+    const hasHalfStar = rate % 1 !== 0
+    
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) {
+            starRating.innerHTML += '<i class="fas fa-star"></i>'
+        } else if (i === fullStars && hasHalfStar) {
+            starRating.innerHTML += '<i class="fas fa-star-half-alt"></i>'
+        } else {
+            starRating.innerHTML += '<i class="far fa-star"></i>'
+        }
+    }
+
+
+    console.log(total_rate)
+}
+
+rate()
+

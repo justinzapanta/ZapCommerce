@@ -181,10 +181,11 @@
                 </div>
                 <div class="mt-6 absolute bottom-0 w-full">
                     <div class="w-full flex mt-4 h-full mb-4">
+
                         <div class="flex-1">
                             <button onclick="cancel_order()" id="modal-cancel" class="px-10 bg-red-500 hover:bg-red-600 py-3 rounded-xl text-white font-lato font-bold">Cancel Order</button>
-    
                         </div>
+
                         <div class="h-full my-auto">
                             <h1 id="motal-totalPrice" class="mr-10 font-bold font-lato text-lg">Total Price: 10,000</h1>
                         </div>
@@ -200,6 +201,29 @@
         <div class="w-full flex justify-center">
             <div id="loading_" class="animate-spin rounded-full mt-6 h-20 w-20 border-t-2 border-b-2 border-black relative">
                 <i class="fas fa-shopping-cart text-4xl text-black absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+            </div>
+        </div>
+    </div>
+
+    <!--Review Modal-->
+    <div id="review_modal" class="w-full h-full z-50 absolute top-0 left-0 hidden flex-col justify-center">
+        <div class="w-full flex justify-center">
+            <divw class="w-96 bg-white shadow-2xl p-5 rounded-xl border relative">
+                <a onclick="close_reviewModal()" class="hover:cursor-pointer font-bold absolute top-3 right-3">X</a>
+                <h1 class="text-2xl font-bold font-lato ">Write a Review</h1>
+                <h1 class="font-lato mt-3">Product Name:</h1>
+                <p id="product_name_modal" class="font-lato font-bold"></p>
+                <div class="w-full flex flex-col mt-7">
+                    <h1 class="font-lato">Rate your experience with this product:</h1>
+                    <div class=" md:mt-0 text-3xl" id="starRating" rate="0"></div>
+                    <h1 class="font-lato mt-7">Share your experience with this product:</h1>
+                    <textarea class="w-full border mt-2 border-gray-300 rounded-lg pl-1 py-1 font-lato h-44" name="review" id="review"></textarea>
+                </div>
+                <div class="w-full flex justify-end mt-4">
+                    <div class="">
+                        <button onclick="submit_review(this)" id="submit_button" class="px-8 py-2 bg-emerald-400 hover:bg-emerald-500 text-white rounded-lg">Submit</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

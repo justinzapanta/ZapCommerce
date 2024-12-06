@@ -12,43 +12,28 @@
                         <h2 class="text-lg font-semibold mb-4">Categories</h2>
                         <ul class="space-y-4">
                             <li>
-                                <h3 class="text-md font-medium mb-2">Clothing</h3>
+                                <h3 class="text-md font-medium mb-2">Tops</h3>
                                 <ul class="ml-4 space-y-1">
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Men's</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Women's</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Kids</a></li>
+                                    <li><a href="/products/men top" class="text-sm hover:text-blue-600">Men's</a></li>
+                                    <li><a href="/products/women top" class="text-sm hover:text-blue-600">Women's</a></li>
+                                    <li><a href="/products/dress" class="text-sm hover:text-blue-600">Dress</a></li>
+                                    <li><a href="/products/kid top" class="text-sm hover:text-blue-600">Kids</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <h3 class="text-md font-medium mb-2">Electronics</h3>
+                                <h3 class="text-md font-medium mb-2">Bottoms</h3>
                                 <ul class="ml-4 space-y-1">
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Smartphones</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Laptops</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Accessories</a></li>
+                                    <li><a href="/products/men bottoms" class="text-sm hover:text-blue-600">Men's</a></li>
+                                    <li><a href="/products/women bottoms" class="text-sm hover:text-blue-600">Women's</a></li>
+                                    <li><a href="/products/kid bottoms" class="text-sm hover:text-blue-600">Kids</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <h3 class="text-md font-medium mb-2">Home & Living</h3>
+                                <h3 class="text-md font-medium mb-2">Shoes</h3>
                                 <ul class="ml-4 space-y-1">
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Furniture</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Decor</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Kitchen</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h3 class="text-md font-medium mb-2">Books</h3>
-                                <ul class="ml-4 space-y-1">
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Fiction</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Non-fiction</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Educational</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h3 class="text-md font-medium mb-2">Sports & Outdoors</h3>
-                                <ul class="ml-4 space-y-1">
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Equipment</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Clothing</a></li>
-                                    <li><a href="#" class="text-sm hover:text-blue-600">Footwear</a></li>
+                                    <li><a href="/products/men shoes" class="text-sm hover:text-blue-600">Men's</a></li>
+                                    <li><a href="/products/women shoes" class="text-sm hover:text-blue-600">Women's</a></li>
+                                    <li><a href="/products/kid shoes" class="text-sm hover:text-blue-600">Kids</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -92,10 +77,6 @@
                                 <option value="price-high">Price: High to Low</option>
                             </select>
                         </div>
-
-                        {% if result != '' %}
-                            <h1 class="font-lato mr-4 mt-2 hidden md:block">Result: <span class="font-bold">{{result}}</span></h1>
-                        {% endif %}
                     </div>
 
 
@@ -114,8 +95,10 @@
                                     <div class="p-4 flex-grow flex flex-col justify-between">
                                         <h2 class="text-sm sm:text-md font-semibold text-gray-800 mb-2 line-clamp-2">{{product.product_name}}</h2>
                                         <div class="flex justify-between items-center">
-                                            <div class="text-sm font-bold text-gray-900">${{product.product_price}}</div>
-                                            <div class="text-xs sm:text-sm text-red-500 line-through">$99.99</div>
+                                            <div class="text-sm font-bold text-gray-900">₱{{product.product_current_price}}</div>
+                                            {% if product.product_current_price !=  product.product_price %}
+                                                <div class="text-sm text-red-500 line-through">₱{{product.product_price}}</div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

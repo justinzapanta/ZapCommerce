@@ -26,8 +26,9 @@ class Products(models.Model):
     product_new_released = models.BooleanField()
     product_discount = models.IntegerField()
     product_search_key = models.TextField()
-
-    product_stripe_id = models.CharField(max_length=200)
+    product_current_price = models.IntegerField()
+    product_stripe_id = models.CharField(max_length=200, null=True)
+    product_total_review = models.IntegerField(null=True)
 
     def __str__(self) -> str:
         return self.product_name
@@ -56,4 +57,27 @@ class Transaction(models.Model):
     
     
     def __str__(self) -> str:
-        return f'Invoice: {self.transaction_invoice} - {self.transaction_owner.username}'
+        return f'Invoice: {self.transaction_invoice} - {self.transaction_status} - {self.transaction_owner.username}'
+
+
+class Product_star(models.Model):
+    rate_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    five_star_total = models.IntegerField(default=0)
+    four_star_total = models.IntegerField(default=0)
+    three_star_total = models.IntegerField(default=0)
+    two_star_total = models.IntegerField(default=0)
+    one_star_total = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return self.product.product_name
+    
+
+
+class User_review(models.Model):
+    review_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    review_user = models.ForeignKey(User_info, on_delete=models.CASCADE)
+    review_product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    review_rating = models.IntegerField()
+    review_comment = models.TextField()
+    
