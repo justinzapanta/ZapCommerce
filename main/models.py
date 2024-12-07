@@ -11,6 +11,8 @@ class User_info(models.Model):
     user_lastName = models.CharField(max_length=50)
     user_address = models.CharField(max_length=250)
     user_profilePicture = models.ImageField(upload_to='./main/static/img/project_img', default=None, null=True, blank=True )
+    user_is_admin = models.BooleanField(default=False)
+
 
 
 class Products(models.Model):

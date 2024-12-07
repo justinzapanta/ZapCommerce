@@ -130,8 +130,15 @@ def sign_in(request, current_location='/'):
             )
         
         if user:
-            login(request, user)
+            user_info = models.User_info.objects.filter(
+                user_auth_credentials = user,
+                user_is_admin = True
+            )
 
+            login(request, user)
+            if user_info:
+                request.session['is_admin'] = True
+                return redirect(dashboard)
             return redirect(current_location)
         else:
             data['notif'] = 'Invalid Email or Password'
@@ -141,6 +148,8 @@ def sign_in(request, current_location='/'):
 
 def sign_out(request):
     logout(request)
+    if request.session.get('is_admin'):
+        del request.session['is_admin']
     return redirect('sign-in')
 
 
@@ -237,63 +246,77 @@ def profile(request):
 #admin
 
 def dashboard(request):
-    total_sales = models.Transaction.objects.filter(transaction_status = 'Delivered').values('transaction_total_price', 'transaction_invoice').distinct()
-    total_product = models.Products.objects.count()
-    total_users = models.User_info.objects.count()
+    if request.session.get('is_admin'):
+        total_sales = models.Transaction.objects.filter(transaction_status = 'Delivered').values('transaction_total_price', 'transaction_invoice').distinct()
+        total_product = models.Products.objects.count()
+        total_users = models.User_info.objects.count()
 
-    total = 0
-    total_order = 0
-    for price in total_sales:
-        total += price['transaction_total_price']
-        total_order += 1
-    total = '{:,}'.format(total)
-    return render(request, 'main/admin/dashboard.html', {
-        'total_price' : total,
-        'total_product' : total_product, 
-        'total_order' : total_order,
-        'total_users' : total_users
-        } )
+        total = 0
+        total_order = 0
+        for price in total_sales:
+            total += price['transaction_total_price']
+            total_order += 1
+        total = '{:,}'.format(total)
+        return render(request, 'main/admin/dashboard.html', {
+            'total_price' : total,
+            'total_product' : total_product, 
+            'total_order' : total_order,
+            'total_users' : total_users
+            } )
+    return redirect('store')
 
 
 
 def users(request):
-    users = models.User_info.objects.all()
-    total_users = users.count()
-    return render(request, 'main/admin/users.html', {'total_users' : total_users, 'users' : users})
-
+    if request.session.get('is_admin'):
+        users = models.User_info.objects.all()
+        total_users = users.count()
+        return render(request, 'main/admin/users.html', {'total_users' : total_users, 'users' : users})
+    return redirect('store')
 
 def seller_products(request):
-    products = models.Products.objects.all()
-    total_products = products.count()
-    search = ''
-    try:
-        if request.method == 'GET':
-            products = models.Products.objects.filter(product_search_key__icontains = request.GET['search'])
-            search = request.GET['search']
-    except:
-        pass
-        
-    return render(request, 'main/admin/products.html', {'total_products' : total_products, 'products' : products, 'search' : search})
-
+    if request.session.get('is_admin'):
+        products = models.Products.objects.all()
+        total_products = products.count()
+        search = ''
+        try:
+            if request.method == 'GET':
+                products = models.Products.objects.filter(product_search_key__icontains = request.GET['search'])
+                search = request.GET['search']
+        except:
+            pass
+            
+        return render(request, 'main/admin/products.html', {'total_products' : total_products, 'products' : products, 'search' : search})
+    return redirect('store')
 
 
 
 def seller_orders(request, status='In Progress'):
-    if status != 'In Progress' and status != 'Delivered' and status != 'Cancelled':
-        status = 'In Progress'
+    if request.session.get('is_admin'):
+        if status != 'In Progress' and status != 'Delivered' and status != 'Cancelled':
+            status = 'In Progress'
 
-    orders = models.Transaction.objects.filter(transaction_status = status).order_by('-transaction_invoice').values('transaction_invoice').distinct()
-    total_orders= orders.count()
+        try:
+            if request.method == 'GET':
+                orders = models.Transaction.objects.filter(
+                    transaction_status = status,
+                    transaction_owner__username__icontains = request.GET['search']
+                    ).order_by('-transaction_invoice').values('transaction_invoice').distinct()
+        except:
+            orders = models.Transaction.objects.filter(transaction_status = status).order_by('-transaction_invoice').values('transaction_invoice').distinct()
 
-    order_list = []
-    try:
-        for order in orders:
-            item = models.Transaction.objects.filter(
-                transaction_status = status,
-                transaction_invoice = order['transaction_invoice']
-            )
-            order_list.append(item[0])
-    except:
-        print('Error')
+        total_orders= orders.count()
 
-    return render(request, 'main/admin/seller_order.html', {'status' : status, 'order_list' : order_list, 'total_orders' : total_orders})
+        order_list = []
+        try:
+            for order in orders:
+                item = models.Transaction.objects.filter(
+                    transaction_status = status,
+                    transaction_invoice = order['transaction_invoice']
+                )
+                order_list.append(item[0])
+        except:
+            print('Error')
+
+        return render(request, 'main/admin/seller_order.html', {'status' : status, 'order_list' : order_list, 'total_orders' : total_orders})
+    return redirect('store')
